@@ -1,7 +1,7 @@
 ﻿
 using Application.Interfaces.Commands;
 using Domain.Entities;
-using Infrastructrure.Persistence;
+using Infrastructure.Persistence;
 
 namespace Infrastructrure.Command
 {

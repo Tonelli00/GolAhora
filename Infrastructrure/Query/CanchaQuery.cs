@@ -1,6 +1,6 @@
 ﻿
 
-namespace Infrastructrure.Query
+namespace Infrastructure.Query
 {
     public class CanchaQuery
     {

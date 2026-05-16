@@ -3,7 +3,9 @@ using Application.Interfaces;
 using Application.Interfaces.Commands;
 using Application.UseCases;
 using Infrastructrure.Command;
+using Infrastructure.Persistence;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration["ConnectionString"];
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+
 
 
 
