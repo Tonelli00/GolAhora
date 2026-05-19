@@ -190,6 +190,7 @@ namespace Infrastructure.Migrations
                     IdCancha = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TipoCanchaId = table.Column<int>(type: "int", nullable: false),
+                    Disponibilidad = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -274,8 +275,8 @@ namespace Infrastructure.Migrations
                     IdCancha = table.Column<int>(type: "int", nullable: false),
                     IdDescuento = table.Column<int>(type: "int", nullable: true),
                     FechaRes = table.Column<DateTime>(type: "datetime", nullable: false),
-                    HorarioInicio = table.Column<int>(type: "int", nullable: false),
-                    HorarioFin = table.Column<int>(type: "int", nullable: false),
+                    HorarioInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HorarioFin = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MontoTotal = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     EsValida = table.Column<bool>(type: "bit", nullable: false)
                 },

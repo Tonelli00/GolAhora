@@ -10,8 +10,8 @@ namespace Domain.Entities
         public int IdCancha { get; set; }
         public int? IdDescuento { get; set; }
         public DateTime FechaRes {  get; set; }
-        public int HorarioInicio { get; set; }
-        public int HorarioFin { get; set; }
+        public DateTime HorarioInicio { get; set; }
+        public DateTime HorarioFin { get; set; }
         public double MontoTotal { get; set; }
         public bool EsValida { get; set; }
          

@@ -1,14 +1,14 @@
 ﻿
+using System.Security.Cryptography.X509Certificates;
 
-namespace Application.DTOs.Response
+namespace Application.DTOs.Request.TipoCancha
 {
-    public class TipoCanchaResponse
+    public class CrearTipoCanchaRequest
     {
         public string Nombre { get; set; }
         public int Superficie { get; set; }
         public int Capacidad { get; set; }
-        public int Precio { get; set; }
         public int Duracion { get; set; }
-
+        public int Precio { get; set; }
     }
 }

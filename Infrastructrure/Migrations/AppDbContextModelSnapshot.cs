@@ -52,6 +52,10 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCancha"));
 
+                    b.Property<string>("Disponibilidad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
@@ -393,11 +397,11 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("FechaRes")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("HorarioFin")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("HorarioFin")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("HorarioInicio")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("HorarioInicio")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdCancha")
                         .HasColumnType("int");
@@ -562,13 +566,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Cancha", b =>
                 {
-                    b.HasOne("Domain.Entities.TipoCancha", "tipoCancha")
+                    b.HasOne("Domain.Entities.TipoCancha", "TipoCancha")
                         .WithMany()
                         .HasForeignKey("TipoCanchaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("tipoCancha");
+                    b.Navigation("TipoCancha");
                 });
 
             modelBuilder.Entity("Domain.Entities.Clase", b =>

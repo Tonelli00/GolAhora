@@ -137,14 +137,19 @@ namespace Infrastructure.Persistence
                 entity.Property(c => c.IdCancha)
                     .ValueGeneratedOnAdd();
 
-                entity.HasOne(c => c.tipoCancha)
+                entity.HasOne(c => c.TipoCancha)
                     .WithMany()
                     .HasForeignKey(c => c.TipoCanchaId)
                     .OnDelete(DeleteBehavior.Restrict);
+                entity.Property(c => c.Disponibilidad)
+                .HasConversion(
+                    v => string.Join(',', v.Select(h => h.ToString())),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                          .Select(TimeSpan.Parse)
+                          .ToList()
+                );
 
-                entity.Ignore(c => c.Disponibilidad);
             });
-
             // CLASE
 
             modelBuilder.Entity<Clase>(entity =>
