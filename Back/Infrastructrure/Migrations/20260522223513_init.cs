@@ -359,7 +359,8 @@ namespace Infrastructure.Migrations
                     IdEntrenamiento = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DniEntrenador = table.Column<int>(type: "int", nullable: false),
-                    Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                    Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    EntrenadorDni = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -370,6 +371,11 @@ namespace Infrastructure.Migrations
                         principalTable: "Entrenadores",
                         principalColumn: "Dni",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Entrenamiento_Entrenadores_EntrenadorDni",
+                        column: x => x.EntrenadorDni,
+                        principalTable: "Entrenadores",
+                        principalColumn: "Dni");
                 });
 
             migrationBuilder.CreateTable(
@@ -496,6 +502,11 @@ namespace Infrastructure.Migrations
                 name: "IX_Entrenamiento_DniEntrenador",
                 table: "Entrenamiento",
                 column: "DniEntrenador");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Entrenamiento_EntrenadorDni",
+                table: "Entrenamiento",
+                column: "EntrenadorDni");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Equipo_CompetenciaIdCompeticion",

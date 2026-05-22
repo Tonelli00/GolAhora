@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260519211955_init")]
+    [Migration("20260522223513_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -189,12 +189,17 @@ namespace Infrastructure.Migrations
                     b.Property<int>("DniEntrenador")
                         .HasColumnType("int");
 
+                    b.Property<int?>("EntrenadorDni")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(10,2)");
 
                     b.HasKey("IdEntrenamiento");
 
                     b.HasIndex("DniEntrenador");
+
+                    b.HasIndex("EntrenadorDni");
 
                     b.ToTable("Entrenamiento", (string)null);
                 });
@@ -608,6 +613,10 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Entrenador", null)
+                        .WithMany("Entrenamientos")
+                        .HasForeignKey("EntrenadorDni");
+
                     b.Navigation("Entrenador");
                 });
 
@@ -795,6 +804,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Inscripciones");
 
                     b.Navigation("Reservas");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Entrenador", b =>
+                {
+                    b.Navigation("Entrenamientos");
                 });
 
             modelBuilder.Entity("Domain.Entities.Profesor", b =>
