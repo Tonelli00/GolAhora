@@ -15,6 +15,6 @@ namespace Application.DTOs.Request.Cliente
         public string Password { get; set; }
         public string Localidad { get; set; }
         public string Pais { get; set; }
-        public DateTime FechaNac {  get; set; }
+        public DateOnly FechaNac {  get; set; }
     }
 }
