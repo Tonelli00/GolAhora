@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Interfaces.Administrador;
 using Application.Interfaces.Asistencia;
 using Application.Interfaces.Cancha;
 using Application.Interfaces.Clase;
@@ -53,6 +54,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<ICanchaCommand, CanchaCommand>();
 builder.Services.AddScoped<ICanchaQuery, CanchaQuery>();
 builder.Services.AddScoped<ICanchaService, CanchaService>();
+
+//Administrador
+builder.Services.AddScoped<IAdministradorService, AdministadorService>();
+builder.Services.AddScoped<IAdministradorQuery, AdministradorQuery>();
+builder.Services.AddScoped<IAdministradorCommand, AdministradorCommand>();
 
 
 //TipoCancha

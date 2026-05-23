@@ -1,8 +1,7 @@
 ﻿
-
-namespace Domain.Entities
+namespace Application.DTOs.Request.Administrador
 {
-    public class Usuario
+    public class CrearAdministradorRequest
     {
         public int Dni { get; set; }
         public string Nombre { get; set; }
@@ -11,7 +10,6 @@ namespace Domain.Entities
         public string Pais { get; set; }
         public string Correo { get; set; }
         public string Password { get; set; }
-        public DateOnly FechaNac {  get; set; }
-        public bool Estado { get; set; }
+        public DateOnly FechaNac { get; set; }
     }
 }

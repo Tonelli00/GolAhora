@@ -98,7 +98,7 @@ namespace Infrastructure.Persistence
                     .IsRequired();
 
                 entity.Property(u => u.FechaNac)
-                    .HasColumnType("datetime")
+                    .HasColumnType("date")
                     .IsRequired();
             });
 
