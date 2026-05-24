@@ -90,9 +90,16 @@ namespace Infrastructure.Command
             return entrenador;
         }
 
-        public async Task<bool> AsignarClienteAProfesional(int profesionalId, int clienteId)
+        public async Task<bool> InsertarClase(Clase clase)
         {
-            return true; //INCOMPLETO
+            await context.Set<Clase>().AddAsync(clase);
+            return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> InsertarEntrenamiento(Entrenamiento entrenamiento)
+        {
+            await context.Set<Entrenamiento>().AddAsync(entrenamiento);
+            return await context.SaveChangesAsync() > 0;
         }
     }
 }

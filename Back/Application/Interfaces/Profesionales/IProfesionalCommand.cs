@@ -16,7 +16,8 @@ namespace Application.Interfaces.Profesionales
         Task<bool> EliminarProfesional(int id);
         Task<Profesor> VerificarCertificacionProfesor(int id, bool estado);
         Task<Entrenador> VerificarCertificacionEntrenador(int id, bool estado);
-        Task<bool> AsignarClienteAProfesional(int profesionalId, int clienteId);
+        Task<bool> InsertarClase(Clase clase);
+        Task<bool> InsertarEntrenamiento(Domain.Entities.Entrenamiento entrenamiento);  //Se uso la ruta para no cambiar el namespace de Entrenamiento ya establecido
 
     }
 }
