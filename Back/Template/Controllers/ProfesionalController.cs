@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Request.Profesional;
 using Application.Interfaces.Profesionales;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace Template.Controllers
 {
@@ -20,14 +21,14 @@ namespace Template.Controllers
         public async Task<IActionResult> RegistrarProfesor([FromBody] RegistrarProfesorRequest request)
         {
             var resultado = await _profesionalService.RegistrarProfesor(request);
-            return CreatedAtAction(nameof(ConsultarProfesorPorDni), new { dni = resultado.Dni }, resultado);
+            return CreatedAtAction(nameof(ConsultarPorDni), new { dni = resultado.Dni }, resultado);
         }
 
         [HttpPost("entrenadores")]
         public async Task<IActionResult> RegistrarEntrenador([FromBody] RegistrarEntrenadorRequest request)
         {
             var resultado = await _profesionalService.RegistrarEntrenador(request);
-            return CreatedAtAction(nameof(ConsultarEntrenadorPorDni), new { dni = resultado.Dni }, resultado);
+            return CreatedAtAction(nameof(ConsultarPorDni), new { dni = resultado.Dni }, resultado);
         }
 
         // RF47: MODIFICAR
@@ -46,51 +47,56 @@ namespace Template.Controllers
         }
 
         // RF48: CONSULTAR POR DNI
-        [HttpGet("profesores/{dni}")]
-        public async Task<IActionResult> ConsultarProfesorPorDni([FromRoute] int dni)
+        [HttpGet("{dni}")]
+        public async Task<IActionResult> ConsultarPorDni([FromRoute] int dni)
         {
-            var resultado = await _profesionalService.ConsultarProfesorPorDni(dni);
-            return Ok(resultado);
-        }
-
-        [HttpGet("entrenadores/{dni}")]
-        public async Task<IActionResult> ConsultarEntrenadorPorDni([FromRoute] int dni)
-        {
-            var resultado = await _profesionalService.ConsultarEntrenadorPorDni(dni);
-            return Ok(resultado);
+            try
+            {
+                var resultado = await _profesionalService.ConsultarProfesorPorDni(dni);
+                return Ok(resultado);
+            }
+            catch
+            {
+                var resultado = await _profesionalService.ConsultarEntrenadorPorDni(dni);
+                return Ok(resultado);
+            }
         }
 
         // RF48: LISTAR TODOS
-        [HttpGet("profesores")]
-        public async Task<IActionResult> ConsultarTodosLosProfesores()
+        [HttpGet]
+        public async Task<IActionResult> ConsultarTodos([FromQuery] string tipo)
         {
-            var resultado = await _profesionalService.ConsultarTodosLosProfesores();
-            return Ok(resultado);
-        }
+            if (tipo.ToLower() == "profesor")
+            {
+                var resultado = await _profesionalService.ConsultarTodosLosProfesores();
+                return Ok(resultado);
+            }
+            else if (tipo.ToLower() == "entrenador")
+            {
+                var resultado = await _profesionalService.ConsultarTodosLosEntrenadores();
+                return Ok(resultado);
+            }
 
-        [HttpGet("entrenadores")]
-        public async Task<IActionResult> ConsultarTodosLosEntrenadores()
-        {
-            var resultado = await _profesionalService.ConsultarTodosLosEntrenadores();
-            return Ok(resultado);
+            return BadRequest(new { Message = "El tipo de profesional debe ser 'profesor' o 'entrenador'." });
         }
 
         // RF49: ELIMINAR 
-        [HttpDelete("profesores/{dni}")]
-        public async Task<IActionResult> EliminarProfesor([FromRoute] int dni)
+        [HttpDelete("{dni}")]
+        public async Task<IActionResult> Eliminar([FromRoute] int dni)
         {
-            var resultado = await _profesionalService.EliminarProfesor(dni);
-            return Ok(resultado);
+            try
+            {
+                var resultado = await _profesionalService.EliminarProfesor(dni);
+                return Ok(resultado);
+            }
+            catch
+            {
+                var resultado = await _profesionalService.EliminarEntrenador(dni);
+                return Ok(resultado);
+            }
         }
 
-        [HttpDelete("entrenadores/{dni}")]
-        public async Task<IActionResult> EliminarEntrenador([FromRoute] int dni)
-        {
-            var resultado = await _profesionalService.EliminarEntrenador(dni);
-            return Ok(resultado);
-        }
-
-        // RF50: IMPRIMIR
+        // RF50: CONSULTAR E IMPRIMIR SI SE REQUIERE
         [HttpGet("{dni}/ficha")]
         public async Task<IActionResult> ImprimirFichaProfesional([FromRoute] int dni, [FromQuery] string tipoProfesional)
         {

@@ -121,10 +121,7 @@ namespace Application.UseCases
             var profesor = await _query.ObtenerProfesorPorId(dni);
             if (profesor == null) throw new ExceptionNotFound("Profesor no encontrado.");
 
-            profesor.Estado = false;
-            var resultado = await _command.ModificarProfesor(profesor);
-
-            return resultado != null;
+            return await _command.EliminarProfesional(dni);
         }
 
         public async Task<bool> EliminarEntrenador(int dni)
@@ -134,10 +131,7 @@ namespace Application.UseCases
             var entrenador = await _query.ObtenerEntrenadorPorId(dni);
             if (entrenador == null) throw new ExceptionNotFound("Entrenador no encontrado.");
 
-            entrenador.Estado = false;
-            var resultado = await _command.ModificarEntrenador(entrenador);
-
-            return resultado != null;
+            return await _command.EliminarProfesional(dni);
         }
 
         public async Task<string> ImprimirFichaProfesional(int dni, string tipoProfesional)
