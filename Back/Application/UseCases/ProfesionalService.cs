@@ -170,15 +170,16 @@ namespace Application.UseCases
                 if (!profesor.EstaCertificado)
                     throw new ExceptionConflict("El profesor no tiene habilitada la certificación deportiva.");
 
-                var nuevaClase = new Clase
+                var nuevaClase = new Domain.Entities.Clase
                 {
-                    IdProfesor = profesor.Dni,
+                    DniProfesor = profesor.Dni,
                     Cupo = 1,
                     Precio = precio,
-                    Inscripto = new List<Inscripcion> { new Inscripcion { DniCliente = clienteId } }
+                    Inscripto = new List<Inscripcion> { new Inscripcion { DniCliente = clienteId } },
+                    IdActividad = 1
                 };
 
-                var resultadoClase = await _command.InsertarClase(nuevaClase);
+                var resultadoClase = await _command.InsertarClase((dynamic)nuevaClase); 
                 return resultadoClase != null;
             }
 

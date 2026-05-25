@@ -25,7 +25,7 @@ namespace Application.UseCases
                 throw new ExceptionBadRequest("Debe ingresar un nombre valido");
             }
 
-            if (request.Superficie <= 0)
+            if (String.IsNullOrEmpty(request.Superficie))
             {
                 throw new ExceptionBadRequest("Debe ingresar una superficie valida");
             }
@@ -65,6 +65,22 @@ namespace Application.UseCases
                 Precio = tipoCanchaCreada.Precio,
                 Duracion = tipoCanchaCreada.Duracion,
             };
+        }
+
+        public async Task<List<TipoCanchaResponse>> ListarTipoCancha()
+        {
+            var canchas = await _query.ListarTipoCanchas();
+
+            return canchas.Select(tipoCancha =>  new TipoCanchaResponse
+            {
+                Id = tipoCancha.IdTipoCancha,
+                Nombre = tipoCancha.Nombre,
+                Superficie = tipoCancha.Superficie,
+                Capacidad = tipoCancha.Capacidad,
+                Precio = tipoCancha.Precio,
+                Duracion = tipoCancha.Duracion,
+            }).ToList(); 
+
         }
     }
 }

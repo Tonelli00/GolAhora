@@ -2,6 +2,7 @@
 using Application.DTOs.Response.Reserva;
 using Application.Exceptions;
 using Application.Interfaces.Cancha;
+using Application.Interfaces.HorarioCancha;
 using Application.Interfaces.Reserva;
 using Domain.Entities;
 
@@ -12,15 +13,21 @@ namespace Application.UseCases
         private readonly IReservaCommand _reservaCommand;
         private readonly IReservaQuery _reservaQuery;
         private readonly ICanchaQuery _canchaQuery;
+        private readonly IHorarioCanchaQuery _horarioCanchaQuery;
+        private readonly IHorarioCanchaCommand _horarioCanchaCommand;
 
         public ReservaService(
             IReservaCommand reservaCommand,
             IReservaQuery reservaQuery,
-            ICanchaQuery canchaQuery)
+            ICanchaQuery canchaQuery,
+            IHorarioCanchaQuery horarioCanchaQuery,
+            IHorarioCanchaCommand horarioCanchaCommand)
         {
             _reservaCommand = reservaCommand;
             _reservaQuery = reservaQuery;
             _canchaQuery = canchaQuery;
+            _horarioCanchaQuery= horarioCanchaQuery;
+            _horarioCanchaCommand = horarioCanchaCommand;
         }
 
         public async Task<ReservaResponse> CrearReserva(CrearReservaRequest request)
@@ -39,40 +46,57 @@ namespace Application.UseCases
             {
                 throw new ExceptionBadRequest("Debe ingresar una cancha valida");
             }
-            var cancha = await _canchaQuery.ConsultarCancha(request.IdCancha) ?? throw new ExceptionNotFound("La cancha no existe"); 
 
-            if (request.FechaReserva == DateTime.MinValue)
+            var cancha = await _canchaQuery.ConsultarCancha(request.IdCancha) ?? throw new ExceptionNotFound("La cancha no existe");
+
+            if (request.IdCanchaHorario <= 0)
             {
-                throw new ExceptionBadRequest("Debe ingresar una fecha valida");
+                throw new ExceptionBadRequest("Debe ingresar un horario valido");
+            }
+         
+
+            var horarioCancha = await _horarioCanchaQuery.ConsultarHorarioCancha(request.IdCanchaHorario);
+            if (horarioCancha == null)
+            {
+                throw new ExceptionBadRequest("Debe un horario valido");
             }
 
-            if (request.FechaReserva < DateTime.Now)
+            if (horarioCancha.IdCancha!=request.IdCancha)
             {
-                throw new ExceptionBadRequest("La fecha de reserva no puede ser menor a la actual");
+                throw new ExceptionBadRequest("El horario solicitado no pertenece a la cancha");
+            }
+
+            if ( await _reservaQuery.ExisteReserva(request.IdCanchaHorario, request.Fecha))
+            {
+                throw new ExceptionConflict("El día que intenta reservar ya fue reservado");
             }
 
             var reserva = new Reserva
             {
                 DniCliente = request.DniCliente,
                 IdCancha = request.IdCancha,
-                FechaRes = request.FechaReserva,
-                HorarioInicio = request.HorarioInicio,
-                HorarioFin = request.HorarioFin,
+                IdCanchaHorario = request.IdCanchaHorario,
                 MontoTotal = cancha.TipoCancha.Precio,
-                Cancha=cancha
+                Fecha=request.Fecha,
+                EsValida = true,
+                Cancha = cancha
             };
 
             var reservaCreada = await _reservaCommand.CrearReserva(reserva);
-
             return new ReservaResponse
             {
                 ReservaId = reservaCreada.IdReserva,
                 DniCliente = reservaCreada.DniCliente,
-                IdDescuento = reservaCreada.IdDescuento,
-                FechaRes = reservaCreada.FechaRes,
-                HoraInicio = reservaCreada.HorarioInicio,
-                HoraFin = reservaCreada.HorarioFin,
-                Total = reservaCreada.MontoTotal
+                ReservaHorarioCanchaResponse = new DTOs.Response.HorarioCancha.ReservaHorarioCanchaResponse
+                {
+                    IdCanchaHorario= horarioCancha.Id,
+                    Fecha = reserva.Fecha,
+                    HoraInicio= horarioCancha.HoraInicio,
+                    HoraFin= horarioCancha.HoraFin,
+                },
+                Total = reservaCreada.MontoTotal,
+                NombreCancha=reservaCreada.Cancha.Nombre,
+                esValida=true
             };
         }
 
@@ -94,11 +118,16 @@ namespace Application.UseCases
             {
                 ReservaId = reserva.IdReserva,
                 DniCliente = reserva.DniCliente,
-                IdDescuento = reserva.IdDescuento,
-                FechaRes = reserva.FechaRes,
-                HoraInicio = reserva.HorarioInicio,
-                HoraFin = reserva.HorarioFin,
-                Total = reserva.MontoTotal
+                ReservaHorarioCanchaResponse = new DTOs.Response.HorarioCancha.ReservaHorarioCanchaResponse
+                {
+                    IdCanchaHorario = reserva.HorarioCancha.Id,
+                    Fecha = reserva.Fecha,
+                    HoraInicio = reserva.HorarioCancha.HoraInicio,
+                    HoraFin = reserva.HorarioCancha.HoraFin,
+                },
+                Total = reserva.MontoTotal,
+                NombreCancha = reserva.Cancha.Nombre,
+                esValida=reserva.EsValida
             };
         }
 
@@ -110,11 +139,18 @@ namespace Application.UseCases
             {
                 ReservaId = r.IdReserva,
                 DniCliente = r.DniCliente,
-                IdDescuento = r.IdDescuento,
-                FechaRes = r.FechaRes,
-                HoraInicio = r.HorarioInicio,
-                HoraFin = r.HorarioFin,
-                Total = r.MontoTotal
+                ReservaHorarioCanchaResponse = new DTOs.Response.HorarioCancha.ReservaHorarioCanchaResponse
+                {
+                    IdCanchaHorario = r.HorarioCancha.Id,
+                    Fecha = r.Fecha,
+                    HoraInicio = r.HorarioCancha.HoraInicio,
+                    HoraFin = r.HorarioCancha.HoraFin,
+                },
+                Total = r.MontoTotal,
+                NombreCancha = r.Cancha.Nombre,
+                esValida=r.EsValida
+
+
             }).ToList();
         }
 
@@ -125,16 +161,7 @@ namespace Application.UseCases
                 throw new ExceptionBadRequest("Debe ingresar datos");
             }
 
-            if (request.NuevaFecha == DateTime.MinValue)
-            {
-                throw new ExceptionBadRequest("Debe ingresar una fecha valida");
-            }
-
-            if (request.NuevaFecha < DateTime.Now)
-            {
-                throw new ExceptionBadRequest("La fecha no puede ser menor a la actual");
-            }
-
+           
             var reserva = await _reservaQuery.ConsultarReserva(request.ReservaId);
 
             if (reserva == null)
@@ -142,7 +169,14 @@ namespace Application.UseCases
                 throw new ExceptionNotFound("Reserva no encontrada");
             }
 
-            reserva.FechaRes = request.NuevaFecha;
+            if (request.IdHorarioCancha==null)
+            {
+                throw new ExceptionNotFound("Reserva no encontrada");
+            }
+
+            var horarioCancha = await _horarioCanchaQuery.ConsultarHorarioCancha(request.IdHorarioCancha);
+
+            reserva.IdCanchaHorario = request.IdHorarioCancha;
 
             var reservaActualizada = await _reservaCommand.ModificarReserva(reserva);
 
@@ -150,11 +184,18 @@ namespace Application.UseCases
             {
                 ReservaId = reservaActualizada.IdReserva,
                 DniCliente = reservaActualizada.DniCliente,
-                IdDescuento = reservaActualizada.IdDescuento,
-                FechaRes = reservaActualizada.FechaRes,
-                HoraInicio = reservaActualizada.HorarioInicio,
-                HoraFin = reservaActualizada.HorarioFin,
-                Total = reservaActualizada.MontoTotal
+                ReservaHorarioCanchaResponse = new DTOs.Response.HorarioCancha.ReservaHorarioCanchaResponse
+                {
+                    IdCanchaHorario = horarioCancha.Id,
+                    Fecha = reservaActualizada.Fecha,
+                    HoraInicio = horarioCancha.HoraInicio,
+                    HoraFin = horarioCancha.HoraFin,
+                },
+                Total = reservaActualizada.MontoTotal,
+                NombreCancha = reservaActualizada.Cancha.Nombre,
+                esValida= reservaActualizada.EsValida,
+
+
             };
         }
 
@@ -176,14 +217,41 @@ namespace Application.UseCases
 
             return new ReservaResponse
             {
-                ReservaId = reservaEliminada.IdReserva,
-                DniCliente = reservaEliminada.DniCliente,
-                IdDescuento = reservaEliminada.IdDescuento,
-                FechaRes = reservaEliminada.FechaRes,
-                HoraInicio = reservaEliminada.HorarioInicio,
-                HoraFin = reservaEliminada.HorarioFin,
-                Total = reservaEliminada.MontoTotal
+                ReservaId = reserva.IdReserva,
+                DniCliente = reserva.DniCliente,
+                ReservaHorarioCanchaResponse = new DTOs.Response.HorarioCancha.ReservaHorarioCanchaResponse
+                {
+                    IdCanchaHorario = reserva.HorarioCancha.Id,
+                    Fecha = reserva.Fecha,
+                    HoraInicio = reserva.HorarioCancha.HoraInicio,
+                    HoraFin = reserva.HorarioCancha.HoraFin,
+                },
+                Total = reserva.MontoTotal,
+                NombreCancha = reserva.Cancha.Nombre,
+                esValida=reserva.EsValida
             };
+        }
+
+        public async Task<List<ReservaResponse>> ListarReservasPorDni(int dni)
+        {
+            var reservas = await _reservaQuery.ListarPorDniCliente(dni);
+            return reservas.Select(r => new ReservaResponse
+            {
+
+                ReservaId = r.IdReserva,
+                DniCliente = r.DniCliente,
+                ReservaHorarioCanchaResponse = new DTOs.Response.HorarioCancha.ReservaHorarioCanchaResponse
+                {
+                    IdCanchaHorario = r.HorarioCancha.Id,
+                    Fecha = r.Fecha,
+                    HoraInicio = r.HorarioCancha.HoraInicio,
+                    HoraFin = r.HorarioCancha.HoraFin,
+                },
+                Total = r.MontoTotal,
+                NombreCancha = r.Cancha.Nombre,
+                esValida = r.EsValida
+
+            }).ToList();
         }
     }
 }

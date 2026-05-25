@@ -11,7 +11,7 @@ namespace Domain.Entities
         public string Pais { get; set; }
         public string Correo { get; set; }
         public string Password { get; set; }
-        public DateTime FechaNac {  get; set; }
+        public DateOnly FechaNac {  get; set; }
         public bool Estado { get; set; }
     }
 }

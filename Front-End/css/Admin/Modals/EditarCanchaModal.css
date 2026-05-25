@@ -1,0 +1,279 @@
+/* OVERLAY */
+
+.modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+/* CARD */
+
+.modal-card{
+    width: 100%;
+    max-width: 500px;
+
+    /* IMPORTANTE */
+    max-height: 90vh;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 24px;
+    color: white;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    animation: modalShow .2s ease;
+}
+
+@keyframes modalShow{
+    from{
+        opacity: 0;
+        transform: scale(.95);
+    }
+    to{
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* TITULOS */
+
+.modal-card h2{
+    margin: 0 0 20px;
+    font-size: 24px;
+}
+
+.modal-card h3{
+    margin: 0;
+    font-size: 18px;
+    opacity: .9;
+}
+
+/* FORM */
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.form-group label{
+    font-size: 14px;
+    opacity: .8;
+}
+
+.form-group input{
+    height: 45px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    padding: 0 14px;
+    background: #222;
+    color: white;
+    font-size: 15px;
+}
+
+/* HEADER */
+
+.horarios-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* HORARIOS */
+
+#horariosContainer{
+    flex: 1;
+
+    max-height: 320px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    padding-right: 6px;
+}
+
+/* SCROLL */
+
+#horariosContainer::-webkit-scrollbar{
+    width: 8px;
+}
+
+#horariosContainer::-webkit-scrollbar-track{
+    background: #1b1b1b;
+    border-radius: 20px;
+}
+
+#horariosContainer::-webkit-scrollbar-thumb{
+    background: #3a3a3a;
+    border-radius: 20px;
+}
+
+#horariosContainer::-webkit-scrollbar-thumb:hover{
+    background: #4a4a4a;
+}
+
+/* FILAS */
+
+.horario-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+
+    gap: 10px;
+    align-items: center;
+
+    background: #202020;
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 12px;
+
+    padding: 14px;
+
+    transition: .2s;
+}
+
+.horario-row:hover{
+    background: #262626;
+}
+
+/* INPUTS */
+
+.horario-row select,
+.horario-row input{
+    height: 42px;
+
+    border: none;
+    outline: none;
+
+    border-radius: 10px;
+
+    background: #2b2b2b;
+
+    color: white;
+
+    padding: 0 12px;
+}
+
+/* BOTON AGREGAR */
+
+.btn-add{
+    height: 38px;
+
+    padding: 0 14px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #2d3436;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    transition: .2s;
+}
+
+.btn-add:hover{
+    background: #3c4345;
+}
+
+/* REMOVE */
+
+.btn-remove{
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #ff5252;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    transition: .2s;
+}
+
+.btn-remove:hover{
+    filter: brightness(1.1);
+}
+
+/* SIN HORARIOS */
+
+.sin-horarios{
+    text-align: center;
+    padding: 20px;
+    opacity: .7;
+    font-size: 14px;
+}
+
+/* BOTONES */
+
+.modal-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    margin-top: 20px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.modal-actions button{
+    height: 42px;
+
+    padding: 0 18px;
+
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    transition: .2s;
+}
+
+.btn-cancelar{
+    background: #2b2b2b;
+    color: white;
+}
+
+.btn-cancelar:hover{
+    background: #383838;
+}
+
+.btn-guardar{
+    background: #00b894;
+    color: white;
+}
+
+.btn-guardar:hover{
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}

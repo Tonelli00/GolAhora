@@ -19,6 +19,7 @@ namespace Infrastructure.Persistence
         public DbSet<Profesor> Profesores { get; set; }
         public DbSet<Entrenador> Entrenadores { get; set; }
         public DbSet<Cancha> Canchas { get; set; }
+        public DbSet<HorarioCancha>HorarioCancha { get; set; }
         public DbSet<TipoCancha> TiposCancha { get; set; }
         public DbSet<Reserva> Reservas { get; set; }
         public DbSet<Cobro> Cobros { get; set; }
@@ -34,6 +35,7 @@ namespace Infrastructure.Persistence
         public DbSet<Equipo> Equipos { get; set; }
         public DbSet<Partido> Partidos { get; set; }
         public DbSet<Reporte> Reportes { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -96,7 +98,7 @@ namespace Infrastructure.Persistence
                     .IsRequired();
 
                 entity.Property(u => u.FechaNac)
-                    .HasColumnType("datetime")
+                    .HasColumnType("date")
                     .IsRequired();
             });
 
@@ -137,19 +139,43 @@ namespace Infrastructure.Persistence
                 entity.Property(c => c.IdCancha)
                     .ValueGeneratedOnAdd();
 
+                entity.Property(c => c.Nombre)
+                    .HasMaxLength(20);
+
                 entity.HasOne(c => c.TipoCancha)
                     .WithMany()
                     .HasForeignKey(c => c.TipoCanchaId)
                     .OnDelete(DeleteBehavior.Restrict);
-                entity.Property(c => c.Disponibilidad)
-                .HasConversion(
-                    v => string.Join(',', v.Select(h => h.ToString())),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                          .Select(TimeSpan.Parse)
-                          .ToList()
-                );
-
             });
+
+            //HORARIO CANCHA
+            
+            modelBuilder.Entity<HorarioCancha>(entity =>
+            {
+                entity.ToTable("HorarioCancha");
+
+                entity.HasKey(h => h.Id);
+
+                entity.Property(h => h.Id)
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(h => h.Dia)
+                    .IsRequired();
+
+                entity.Property(h => h.HoraInicio)
+                    .HasColumnType("time")
+                    .IsRequired();
+
+                entity.Property(h => h.HoraFin)
+                    .HasColumnType("time")
+                    .IsRequired();
+
+                entity.HasOne(h => h.Cancha)
+                    .WithMany(c => c.Disponibilidad)
+                    .HasForeignKey(h => h.IdCancha)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             // CLASE
 
             modelBuilder.Entity<Clase>(entity =>
@@ -166,7 +192,7 @@ namespace Infrastructure.Persistence
 
                 entity.HasOne(c => c.Profesor)
                     .WithMany(p => p.Clases)
-                    .HasForeignKey(c => c.IdProfesor)
+                    .HasForeignKey(c => c.DniProfesor)
                     .HasPrincipalKey(p => p.Dni)
                     .OnDelete(DeleteBehavior.Restrict);
             });
@@ -198,9 +224,9 @@ namespace Infrastructure.Persistence
             {
                 entity.ToTable("Competencia");
 
-                entity.HasKey(c => c.IdCompeticion);
+                entity.HasKey(c => c.IdCompetencia);
 
-                entity.Property(c => c.IdCompeticion)
+                entity.Property(c => c.IdCompetencia)
                     .ValueGeneratedOnAdd();
 
                 entity.Property(c => c.Nombre)
@@ -212,13 +238,17 @@ namespace Infrastructure.Persistence
 
                 entity.Property(c => c.Precio)
                     .HasColumnType("decimal(10,2)");
+
+
+                entity.HasDiscriminator<string>("TipoCompetencia")
+                .HasValue<Liga>("Liga")
+                .HasValue<Torneo>("Torneo");
             });
 
             // TORNEO
 
             modelBuilder.Entity<Torneo>(entity =>
             {
-                entity.ToTable("Torneo");
 
                 entity.Property(t => t.FaseAct)
                     .HasMaxLength(30);
@@ -272,7 +302,7 @@ namespace Infrastructure.Persistence
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(p => p.Competencia)
-                    .WithMany()
+                    .WithMany(c=>c.Partidos)
                     .HasForeignKey(p => p.IdCompetencia)
                     .OnDelete(DeleteBehavior.Restrict);
             });
@@ -288,11 +318,13 @@ namespace Infrastructure.Persistence
                 entity.Property(r => r.IdReserva)
                     .ValueGeneratedOnAdd();
 
-                entity.Property(r => r.FechaRes)
-                    .HasColumnType("datetime");
+                entity.Property(r => r.IdCanchaHorario)
+                    .HasColumnType("int");
 
                 entity.Property(r => r.MontoTotal)
                     .HasColumnType("decimal(10,2)");
+                entity.Property(r => r.Fecha)
+                    .HasColumnType("date");
 
                 entity.HasOne(r => r.Cliente)
                     .WithMany(c => c.Reservas)
@@ -304,7 +336,12 @@ namespace Infrastructure.Persistence
                     .WithMany()
                     .HasForeignKey(r => r.IdCancha)
                     .OnDelete(DeleteBehavior.Restrict);
-            });
+
+                entity.HasOne(r => r.HorarioCancha)
+                .WithMany()
+                .HasForeignKey(r => r.IdCanchaHorario)
+                .OnDelete(DeleteBehavior.Restrict);
+                });
 
             // COBRO
 
