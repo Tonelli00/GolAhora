@@ -238,13 +238,16 @@ namespace Infrastructure.Persistence
 
                 entity.Property(c => c.Precio)
                     .HasColumnType("decimal(10,2)");
+
+                entity.HasDiscriminator<string>("TipoCompetencia")
+                .HasValue<Liga>("Liga")
+                .HasValue<Torneo>("Torneo");
             });
 
             // TORNEO
 
             modelBuilder.Entity<Torneo>(entity =>
             {
-                entity.ToTable("Torneo");
 
                 entity.Property(t => t.FaseAct)
                     .HasMaxLength(30);
