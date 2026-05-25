@@ -224,9 +224,9 @@ namespace Infrastructure.Persistence
             {
                 entity.ToTable("Competencia");
 
-                entity.HasKey(c => c.IdCompeticion);
+                entity.HasKey(c => c.IdCompetencia);
 
-                entity.Property(c => c.IdCompeticion)
+                entity.Property(c => c.IdCompetencia)
                     .ValueGeneratedOnAdd();
 
                 entity.Property(c => c.Nombre)
@@ -238,6 +238,7 @@ namespace Infrastructure.Persistence
 
                 entity.Property(c => c.Precio)
                     .HasColumnType("decimal(10,2)");
+
 
                 entity.HasDiscriminator<string>("TipoCompetencia")
                 .HasValue<Liga>("Liga")
@@ -301,7 +302,7 @@ namespace Infrastructure.Persistence
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(p => p.Competencia)
-                    .WithMany()
+                    .WithMany(c=>c.Partidos)
                     .HasForeignKey(p => p.IdCompetencia)
                     .OnDelete(DeleteBehavior.Restrict);
             });

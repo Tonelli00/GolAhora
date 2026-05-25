@@ -80,7 +80,7 @@ namespace Application.UseCases
             var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(idCompetencia, ct)
                  ?? throw new KeyNotFoundException($"No se encontro competencias con id: {idCompetencia}");
 
-            if (competencia.Equipos.Count >= competencia.Cupos)
+            if (competencia.Equipos.Count() >= competencia.Cupos)
             {
                 throw new InvalidOperationException($"Cupo maximo alcanzado en la competencia {competencia.Nombre}");
             }

@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces.Competencias;
 using Application.DTOs.Request.Competencias;
-using Application.DTOs.Response.Competencias;
+
 
 namespace Template.Controllers
 {
