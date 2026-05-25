@@ -10,9 +10,11 @@ using Application.Interfaces.Partidos;
 using Application.Interfaces.Entrenamiento;
 using Application.Interfaces.HorarioCancha;
 using Application.Interfaces.Incripcion;
+using Application.Interfaces.Profesionales;
 using Application.Interfaces.Reserva;
 using Application.Interfaces.TipoCancha;
 using Application.UseCases;
+using Application.Mappers.Profesional;
 using Infrastructrure.Command;
 using Infrastructrure.Query;
 using Infrastructure.Command;
@@ -52,6 +54,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 //Inyecciones de dependencia
+
+//profesionales
+builder.Services.AddScoped<IProfesionalCommand, ProfesionalCommand>();
+builder.Services.AddScoped<IProfesionalQuery, ProfesionalQuery>();
+builder.Services.AddScoped<IProfesionalService, ProfesionalService>();
+builder.Services.AddScoped<IProfesionalMapper, ProfesionalMapper>();
+
 
 //Cancha
 builder.Services.AddScoped<ICanchaCommand, CanchaCommand>();
