@@ -4,6 +4,9 @@ using Application.Interfaces.Asistencia;
 using Application.Interfaces.Cancha;
 using Application.Interfaces.Clase;
 using Application.Interfaces.Cliente;
+using Application.Interfaces.Competencias;
+using Application.Interfaces.Equipos;
+using Application.Interfaces.Partidos;
 using Application.Interfaces.Entrenamiento;
 using Application.Interfaces.HorarioCancha;
 using Application.Interfaces.Incripcion;
@@ -81,6 +84,21 @@ builder.Services.AddScoped<IReporteQuery, ReporteQuery>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IClienteCommand, ClienteCommand>();
 builder.Services.AddScoped<IClienteQuery, ClienteQuery>();
+
+//Competencias
+builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
+builder.Services.AddScoped<ICompetenciaCommand, CompetenciaCommand>();
+builder.Services.AddScoped<ICompetenciaQuery, CompetenciaQuery>();
+
+//Equipos
+builder.Services.AddScoped<IEquipoService, EquipoService>();
+builder.Services.AddScoped<IEquipoCommand, EquipoCommand>();
+builder.Services.AddScoped<IEquipoQuery, EquipoQuery>();
+
+//Partidos
+builder.Services.AddScoped<IPartidoService, PartidoService>();
+builder.Services.AddScoped<IPartidoCommand, PartidoCommand>();
+builder.Services.AddScoped<IPartidoQuery, PartidoQuery>();
 
 
 //Horario Cancha
