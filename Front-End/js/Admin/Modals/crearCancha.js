@@ -111,7 +111,6 @@ export function crearCancha()
 
   document.body.classList.add("modal-open");
 
-  // CERRAR MODAL
 
   function cerrarModal()
   {
@@ -176,14 +175,37 @@ export function crearCancha()
   modal.querySelector("#form-crear-cancha").addEventListener("submit", async (e) => {
       e.preventDefault();
       const horarios = [];
-      modal.querySelectorAll(".horario-item").forEach(h => {
-          horarios.push({
-            dia: Number(h.querySelector(".dia").value),
-            horaInicio:h.querySelector(".horaInicio").value + ":00",
-            horaFin:h.querySelector(".horaFin").value + ":00"
-          });
+     modal.querySelectorAll(".horario-item").forEach(h => {
+        const dia = Number(h.querySelector(".dia").value);
+        const horaInicio = h.querySelector(".horaInicio").value;
+        const horaFin = h.querySelector(".horaFin").value;
 
-      });
+        if (!horaInicio || !horaFin) return;
+
+        horarios.push({
+            dia,
+            horaInicio: horaInicio + ":00",
+            horaFin: horaFin + ":00"
+        });
+    });
+       if (horarios.length === 0) {
+          
+        Swal.fire({
+          toast: true,
+          position: "bottom-end",
+          icon: "error",
+          title: "Ingrese al menos un horario",
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true,
+
+          customClass: {
+              popup: "toast-golahora toast-popup-error",
+              title: "toast-title"
+          }
+          });
+        return;
+    }
 
       try
       {

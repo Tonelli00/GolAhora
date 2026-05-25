@@ -1,5 +1,6 @@
 export function render(reserva)
 {
+  
     const r = reserva.reservaHorarioCanchaResponse;
 
     const estado = reserva.esValida
@@ -14,10 +15,12 @@ export function render(reserva)
 
         <div class="reserva-info">
 
-          <span class="reserva-badge">Reserva</span>
+          <span class="reserva-badge">
+            Reserva #${reserva.reservaId}
+          </span>
 
           <h3 class="reserva-title">
-            Número de reserva - ${reserva.reservaId}
+            ${reserva.nombreCancha}
           </h3>
 
           <span class="reserva-sub">
@@ -42,16 +45,58 @@ export function render(reserva)
 
           <span class="meta-pill">${r.fecha}</span>
           <span class="meta-pill">${r.horaInicio} - ${r.horaFin}</span>
-          <span class="meta-pill">Cancha: ${reserva.nombreCancha}</span>
 
+        </div>
+
+        <div class="reserva-actions">
+          <button class="cancelar-btn">Cancelar reserva</button>
         </div>
 
       </div>
     `;
 
-    card.addEventListener("click", () => {
-        card.classList.toggle("open");
+     card.querySelector(".reserva-header")
+        .addEventListener("click", () => {
+            card.classList.toggle("open");
+        });
+
+    const btnCancelar = card.querySelector(".cancelar-btn");
+
+    btnCancelar.addEventListener("click", async (e) => {
+        e.stopPropagation();
+
+        const confirm = await Swal.fire({
+            icon: "warning",
+            title: "Cancelar reserva",
+            text: "¿Seguro que querés cancelar esta reserva?",
+            showCancelButton: true,
+            confirmButtonText: "Sí, cancelar",
+            cancelButtonText: "No"
+        });
+
+        if (!confirm.isConfirmed) return;
+
+        try {
+            await eliminarReserva(reserva.reservaId);
+
+            Swal.fire({
+                icon: "success",
+                title: "Reserva cancelada",
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            card.remove();
+
+        } catch (err) {
+            Swal.fire({
+                icon: "error",
+                title: "Error al cancelar",
+                text: err.message
+            });
+        }
     });
 
     return card;
 }
+

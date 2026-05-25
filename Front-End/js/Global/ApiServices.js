@@ -38,18 +38,31 @@ export async function postData(endpointUrl, body) {
     }
 }
 
-export async function putData(endpointUrl) {
+export async function putData(endpointUrl, body) {
     try {
         const response = await fetch(`${base_Url}${endpointUrl}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json"},
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
         });
-        const data = await response.json();
+
+        let data = null;
+        const text = await response.text();
+        data = text ? JSON.parse(text) : null;
+
         if (!response.ok) {
-            throw new Error(data?.Message || "Error en la solicitud");
+            throw new Error(
+                data?.message ||
+                data?.Message ||
+                `Error HTTP ${response.status}`
+            );
         }
+
         return data;
-    } catch(error){
-        throw new Error(error.message || "No se pudo conectar con el servidor");
+
+    } catch (error) {
+        throw error; 
     }
 }

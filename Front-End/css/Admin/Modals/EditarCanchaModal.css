@@ -17,6 +17,14 @@
 .modal-card{
     width: 100%;
     max-width: 500px;
+
+    /* IMPORTANTE */
+    max-height: 90vh;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
     background: #161616;
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 18px;
@@ -45,7 +53,7 @@
 }
 
 .modal-card h3{
-    margin: 0 0 15px;
+    margin: 0;
     font-size: 18px;
     opacity: .9;
 }
@@ -75,19 +83,32 @@
     font-size: 15px;
 }
 
+/* HEADER */
+
+.horarios-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
 /* HORARIOS */
 
 #horariosContainer{
+    flex: 1;
+
+    max-height: 320px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
     display: flex;
     flex-direction: column;
+
     gap: 12px;
 
-    max-height: 300px;
-    overflow-y: auto;
-
-    padding-right: 5px;
+    padding-right: 6px;
 }
-
 
 /* SCROLL */
 
@@ -109,11 +130,23 @@
     background: #4a4a4a;
 }
 
+/* FILAS */
+
 .horario-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+
+    gap: 10px;
+    align-items: center;
+
     background: #202020;
+
     border: 1px solid rgba(255,255,255,0.06);
+
     border-radius: 12px;
-    padding: 14px 16px;
+
+    padding: 14px;
+
     transition: .2s;
 }
 
@@ -121,43 +154,42 @@
     background: #262626;
 }
 
-.horario-info{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+/* INPUTS */
+
+.horario-row select,
+.horario-row input{
+    height: 42px;
+
+    border: none;
+    outline: none;
+
+    border-radius: 10px;
+
+    background: #2b2b2b;
+
+    color: white;
+
+    padding: 0 12px;
 }
 
-.horario-info span:first-child{
-    font-weight: 600;
-    font-size: 15px;
-}
-
-.horario-info span:last-child{
-    font-size: 14px;
-    opacity: .8;
-}
-
-/* HEADER */
-
-.horarios-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-/* BOTON ADD */
+/* BOTON AGREGAR */
 
 .btn-add{
     height: 38px;
+
     padding: 0 14px;
+
     border: none;
     border-radius: 10px;
+
     background: #2d3436;
+
     color: white;
+
     cursor: pointer;
+
     font-weight: 600;
+
     transition: .2s;
 }
 
@@ -165,49 +197,30 @@
     background: #3c4345;
 }
 
-/* FILA */
-
-.horario-row{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr auto;
-    gap: 10px;
-    align-items: center;
-    background: #202020;
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-}
-
-/* INPUTS */
-
-.horario-row select,
-.horario-row input{
-    height: 42px;
-    border: none;
-    border-radius: 10px;
-    background: #2b2b2b;
-    color: white;
-    padding: 0 12px;
-    outline: none;
-}
-
 /* REMOVE */
 
 .btn-remove{
     width: 40px;
     height: 40px;
+
     border: none;
     border-radius: 10px;
+
     background: #ff5252;
+
     color: white;
+
     cursor: pointer;
+
     font-size: 16px;
+
     transition: .2s;
 }
 
 .btn-remove:hover{
     filter: brightness(1.1);
 }
+
 /* SIN HORARIOS */
 
 .sin-horarios{
@@ -223,16 +236,26 @@
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 24px;
+
+    margin-top: 20px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid rgba(255,255,255,0.06);
 }
 
 .modal-actions button{
     height: 42px;
+
     padding: 0 18px;
+
     border: none;
     border-radius: 10px;
+
     cursor: pointer;
+
     font-weight: 600;
+
     transition: .2s;
 }
 

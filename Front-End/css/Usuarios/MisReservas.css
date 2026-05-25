@@ -1,4 +1,3 @@
-
 *{
   margin:0;
   padding:0;
@@ -14,19 +13,11 @@
   --fondo:#0d0d0d;
 }
 
-
-
 body{
   background:var(--fondo);
   color:var(--texto);
   min-height:100vh;
 }
-
-
-nav{
-  margin-bottom:40px;
-}
-
 
 .reservas-page{
   width:100%;
@@ -35,13 +26,11 @@ nav{
   padding:20px;
 }
 
-
 .reservas-page h1{
   font-size:42px;
   font-weight:800;
   letter-spacing:-0.03em;
   margin-bottom:35px;
-  position:relative;
 }
 
 .reservas-page h1::after{
@@ -54,13 +43,11 @@ nav{
   border-radius:20px;
 }
 
-
 #reservasContainer{
   display:flex;
   flex-direction:column;
   gap:18px;
 }
-
 
 .reserva-card{
   background:#151515;
@@ -77,16 +64,12 @@ nav{
   box-shadow:0 10px 25px rgba(34,197,94,0.08);
 }
 
-
-
 .reserva-header{
-  padding:1.4rem;
+  padding:1.2rem;
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
-
-
 
 .reserva-info{
   display:flex;
@@ -107,9 +90,8 @@ nav{
 }
 
 .reserva-title{
-  font-size:24px;
+  font-size:20px;
   font-weight:800;
-  color:white;
 }
 
 .reserva-sub{
@@ -118,7 +100,7 @@ nav{
 }
 
 .reserva-price{
-  font-size:24px;
+  font-size:20px;
   font-weight:800;
   color:var(--verde);
 }
@@ -145,25 +127,23 @@ nav{
   border:1px solid rgba(250,204,21,0.25);
 }
 
-
-
 .reserva-body{
   max-height:0;
   overflow:hidden;
+  padding:0 1.2rem;
   transition:max-height 0.35s ease, padding 0.3s ease;
-  padding:0 1.4rem;
 }
 
 .reserva-card.open .reserva-body{
-  max-height:180px;
-  padding:0 1.4rem 1.4rem;
+  max-height:220px;
+  padding:0 1.2rem 1.2rem;
 }
-
 
 .reserva-meta{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
+  margin-top:10px;
 }
 
 .meta-pill{
@@ -175,14 +155,30 @@ nav{
   font-size:12px;
 }
 
+.reserva-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:12px;
+}
 
+.cancelar-btn{
+  background:transparent;
+  border:1px solid #ff4d4d;
+  color:#ff4d4d;
+  padding:6px 12px;
+  border-radius:8px;
+  font-size:13px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.cancelar-btn:hover{
+  background:#ff4d4d;
+  color:#fff;
+}
 
 .empty-state{
   text-align:center;
   padding:60px 20px;
   color:var(--texto-suave);
-}
-
-.empty-state h2{
-  margin-bottom:10px;
 }

@@ -19,6 +19,12 @@ namespace Infrastructure.Command
             throw new NotImplementedException();
         }
 
+        public async Task EliminarHorario(IEnumerable<HorarioCancha> horarios, CancellationToken ct = default)
+        {
+
+            _context.HorarioCancha.RemoveRange(horarios);
+        }
+
         public async Task<HorarioCancha> ModificarHorario(HorarioCancha horarioCancha, CancellationToken ct = default)
         {
             _context.HorarioCancha.Update(horarioCancha);

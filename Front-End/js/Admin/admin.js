@@ -3,6 +3,7 @@ import { getTipoCanchas } from "../TipoCancha/GetTipoCancha.js";
 import { RenderAdminCards } from "./renderAdminCards.js";
 import { RenderTcCards } from "./renderTcCards.js";
 import { crearCancha } from "./Modals/crearCancha.js";
+import { editarCancha } from "./Modals/editarCancha.js";
 
 export  function adminPanel(){
 const botones = document.querySelectorAll(".sidebar-btn");
@@ -27,23 +28,45 @@ botones.forEach((boton, index) => {
     const seccionAct = boton.textContent.trim();;
 
 
-    if(seccionAct=="Canchas")
-      {
-        const canchas = await getCanchas();
-          const contenido = `<div class="section-header">
-            <button class="btn-primary" id="btn-crear-cancha">
-              + Crear cancha
-            </button>
-          </div>
-          ${RenderAdminCards(canchas)}
-        `;
-        document.querySelector("#canchas").innerHTML = contenido;
-        const btn = document.getElementById("btn-crear-cancha").addEventListener("click",()=>
-          {
-            crearCancha();
-          });
-          
-      }
+    if (seccionAct == "Canchas")
+{
+  const canchas = await getCanchas();
+
+  const container = document.querySelector("#canchas");
+
+  const contenido = `
+    <div class="section-header">
+      <button class="btn-primary" id="btn-crear-cancha">
+        + Crear cancha
+      </button>
+    </div>
+    ${RenderAdminCards(canchas)}
+  `;
+
+  container.innerHTML = contenido;
+
+  container
+    .querySelector("#btn-crear-cancha")
+    .addEventListener("click", crearCancha);
+
+  container
+    .querySelectorAll(".admin-btn-edit")
+    .forEach(btn => {
+
+      btn.addEventListener("click", () => {
+
+        const id = Number(btn.dataset.id);
+        const cancha = canchas.find(c => c.idCancha === id);
+
+        if (cancha) {
+          editarCancha(cancha);
+        }
+
+      });
+
+    });
+}
+
     if(seccionAct=="Tipo de canchas")
       {
         const tipos = await getTipoCanchas();

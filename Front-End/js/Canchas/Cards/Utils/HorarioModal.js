@@ -91,8 +91,10 @@ export function abrirModal(cancha) {
           return;
         }
 
-        horariosContainer.innerHTML = horarios.map(h => `
-          <button class="horario-btn" data-id=${h.horarioCanchaId}>
+        horariosContainer.innerHTML = horarios
+        .filter(h => h.disponible)
+        .map(h => `
+          <button class="horario-btn" data-id="${h.horarioCanchaId}">
             ${h.horaInicio.slice(0,5)} - ${h.horaFin.slice(0,5)}
           </button>
         `).join("");

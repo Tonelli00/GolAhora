@@ -45,10 +45,10 @@ namespace Template.Controllers
             return Ok(response);
         }
 
-        [HttpPut("horario")]
-        public async Task<IActionResult> ModificarHorarioCancha([FromBody] ActualizarHorarioCanchaRequest request)
+        [HttpPut("{canchaId}")]
+        public async Task<IActionResult> ModificarCancha([FromRoute] int canchaId, [FromBody] ActualizarCanchaRequest request)
         {
-            var response = await _service.ModificarHorarioCancha(request);
+            var response = await _service.ModificarCancha(canchaId, request);
             return Ok(response);
         }
 

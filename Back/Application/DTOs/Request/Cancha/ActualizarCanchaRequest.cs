@@ -1,9 +1,11 @@
-﻿namespace Application.DTOs.Request.Cancha
+﻿using Application.DTOs.Request.HorarioCancha;
+
+namespace Application.DTOs.Request.Cancha
 {
     public class ActualizarCanchaRequest
     {
-        public int CanchaId { get; set; }
-        public string HoraInicio { get; set; }
-        public string HoraFin {  get; set; }
+        public string? Nombre { get; set; }
+        public int? TipoCanchaId { get; set; }
+        public List<ActualizarHorarioCanchaRequest>? horarios { get; set; }
     }
 }
