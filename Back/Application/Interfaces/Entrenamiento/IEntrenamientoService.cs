@@ -5,7 +5,7 @@ namespace Application.Interfaces.Entrenamiento
 {
      public interface IEntrenamientoService
     {
-        Task<EntrenamientoResponse> ModificarEntrenamiento(ModificarEntrenamientoRequest request);
+        Task<EntrenamientoResponse> ModificarEntrenamiento(int entrenamientoId, ModificarEntrenamientoRequest request);
         
         Task<EntrenamientoResponse> ImprimirEntrenamiento(int entrenamientoId);
 
@@ -14,6 +14,7 @@ namespace Application.Interfaces.Entrenamiento
         Task<EntrenamientoResponse> ProgramarEntrenamiento(ProgramarEntrenamientoRequest request);
 
         Task<EntrenamientoResponse> EliminarEntrenamiento(int entrenamientoId);
+        Task<List<EntrenamientoFullResponse>> ListarEntrenamientos();
 
     }
 }

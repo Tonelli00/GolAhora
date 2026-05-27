@@ -8,6 +8,7 @@ using Application.Interfaces.Asistencia;
 using Application.Interfaces.Clase;
 using Application.Interfaces.Entrenamiento;
 using Application.Interfaces.Incripcion;
+using Application.Interfaces.Profesionales;
 using Domain.Entities;
 
 
@@ -22,14 +23,15 @@ namespace Application.UseCases
         private readonly IInscripcionQuery _inscripcionQuery;
         private readonly IAsistenciaCommand _asistenciaCommand;
         private readonly IAsistenciaQuery _asistenciaQuery;
+        private readonly IProfesionalQuery _profesionalQuery;
 
         public ClaseService(
             IClaseCommand claseCommand,
-            IClaseQuery claseQuery,
-            
-             IInscripcionQuery inscripcionQuery,
-             IAsistenciaCommand asistenciaCommand,
-             IAsistenciaQuery asistenciaQuery
+            IClaseQuery claseQuery,            
+            IInscripcionQuery inscripcionQuery,
+            IAsistenciaCommand asistenciaCommand,
+            IAsistenciaQuery asistenciaQuery,
+            IProfesionalQuery profesionalQuery
             )
         {
             _asistenciaQuery = asistenciaQuery;
@@ -37,13 +39,65 @@ namespace Application.UseCases
             _claseCommand = claseCommand;
             _claseQuery = claseQuery;
             _asistenciaCommand = asistenciaCommand;
-
+            _profesionalQuery = profesionalQuery;
 
         }
 
 
         public async Task<ClaseResponse> ProgramarClase(ProgramarClasesRequest request)
         {
+
+
+            if (request == null)
+            {
+                throw new ExceptionBadRequest("Debe ingresar datos");
+            }
+            if (String.IsNullOrEmpty(request.Nombre)) 
+            {
+                throw new ExceptionBadRequest("Ingrese un nombre");
+            }
+
+            if (request.Cupo <= 0)
+            {
+                throw new ExceptionBadRequest("Debe ingresar un cupo valido");
+            }
+
+            if (request.Precio <= 0)
+            {
+                throw new ExceptionBadRequest("El precio es invalido");
+
+            }
+
+            var profesor = await _profesionalQuery.ObtenerProfesorPorId(request.DniProfesor);
+            if (profesor == null) 
+            {
+                throw new ExceptionNotFound("El profesor buscado no existe");
+            }
+
+            var clase = new Clase
+            {
+                DniProfesor = request.DniProfesor,
+                Nombre=request.Nombre,
+                Cupo = request.Cupo,
+                Precio = request.Precio,
+                IdActividad = 2,
+                Profesor=profesor
+            };
+
+            var claseProgramada = await _claseCommand.ProgramarClase(clase);
+
+            return new ClaseResponse
+            {
+                Nombre= claseProgramada.Nombre,
+                DniProfesor = claseProgramada.DniProfesor,
+                Cupo = claseProgramada.Cupo,
+                IdClase = claseProgramada.IdClase,
+                Precio = claseProgramada.Precio,                
+            };
+
+        }
+
+        public async Task<ClaseResponse> ModificarClase(int claseId, ModificarClaseRequest request) {
 
 
             if (request == null)
@@ -62,64 +116,27 @@ namespace Application.UseCases
 
             }
 
-            var clase = new Clase
-            {
-                DniProfesor = request.DniProfesor,
-                Cupo = request.Cupo,
-                Precio = request.Precio,
-                IdActividad = 1
-            };
-
-            var claseProgramada = await _claseCommand.ProgramarClase(clase);
-
-            return new ClaseResponse
-            {
-                DniProfesor = claseProgramada.DniProfesor,
-                Cupo = claseProgramada.Cupo,
-                IdClase = claseProgramada.IdClase,
-                Precio = claseProgramada.Precio,                
-            };
-
-        }
-
-        public async Task<ClaseResponse> ModificarClase(ModificarClaseRequest request) {
-
-
-            if (request == null)
-            {
-                throw new ExceptionBadRequest("Debe ingresar datos");
-            }
-
-            if (request.Cupo <=  0)
-            {
-                throw new ExceptionBadRequest("Debe ingresar un cupo valido");
-            }
-
-            if (request.Precio <= 0)
-            {
-                throw new ExceptionBadRequest("El precio es invalido");
-
-            }
-                        
-            var clase = await _claseQuery.ConsultarClase(request.IdClase);
+            var clase = await _claseQuery.ConsultarClase(claseId);
 
             if (clase == null)
             {
                 throw new ExceptionNotFound("Clase no encontrada");
             }
-
-            clase.DniProfesor = request.DniProfesor;
-            clase.Precio = request.Precio;
-            clase.Cupo = request.Cupo;
+            clase.Nombre = request.Nombre ?? clase.Nombre;
+            clase.DniProfesor = (int)request.DniProfesor;
+            clase.Precio = (int)request.Precio;
+            clase.Cupo = (int)request.Cupo;
             
             var ClaseModificada = await _claseCommand.ModificarClase(clase);
 
             return new ClaseResponse
             {
+                Nombre= clase.Nombre,
+                IdClase= clase.IdClase,
                 DniProfesor = ClaseModificada.DniProfesor,
                 Precio = ClaseModificada.Precio,
                 Cupo = ClaseModificada.Cupo,
-                NroActividad=ClaseModificada.IdActividad,
+              
             };
         }
 
@@ -129,11 +146,12 @@ namespace Application.UseCases
 
              return new ClaseResponse
             {
+                Nombre= clase.Nombre,
                 DniProfesor = clase.DniProfesor,
                 IdClase = clase.IdClase,
                 Cupo = clase.Cupo,
                 Precio = clase.Precio,
-                NroActividad = clase.IdActividad,
+            
             };
      }     
      
@@ -156,7 +174,8 @@ namespace Application.UseCases
             var claseEliminada = await _claseCommand.EliminarClase(clase);
 
             return new ClaseResponse
-            {
+            { 
+                Nombre = claseEliminada.Nombre,
                   IdClase = claseEliminada.IdClase,
                   Cupo = claseEliminada.Cupo,
                   DniProfesor = claseEliminada.DniProfesor,
@@ -246,26 +265,35 @@ namespace Application.UseCases
 
         }
 
+        public async Task<List<FullClaseResponse>> ListarClases()
+        {
+            var clases = await _claseQuery.ListarClases();
 
+            return clases.Select(c => new FullClaseResponse
+            {
+                Nombre=c.Nombre,
+                IdClase = c.IdClase,
 
+                Cupo = c.Cupo,
 
+                Profesional = new DTOs.Response.Profesional.ProfesionalResponse
+                {
+                    Dni = c.Profesor.Dni,
+                    Nombre = c.Profesor.Nombre,
+                    Apellido = c.Profesor.Apellido,
+                    Localidad = c.Profesor.Localidad,
+                    Pais = c.Profesor.Pais,
+                    Correo = c.Profesor.Correo,
+                    Estado = c.Profesor.Estado,
+                    Certificado = c.Profesor.Certificado,
+                    EstaCertificado = c.Profesor.EstaCertificado
+                },
 
+                Precio = c.Precio,
 
+                NroActividad = c.IdActividad
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            }).ToList();
+        }
     }
 }

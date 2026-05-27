@@ -20,7 +20,7 @@ namespace Infrastructure.Command
         public async Task<Domain.Entities.Clase> ProgramarClase(Domain.Entities.Clase Clase, CancellationToken ct = default) {
 
 
-            await _context.Clases.AddAsync(Clase, ct);
+             _context.Clases.Add(Clase);
             await _context.SaveChangesAsync(ct);
             return Clase;
         }

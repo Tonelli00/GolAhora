@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Entrenamiento;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,6 +29,11 @@ namespace Infrastructure.Query
         public async Task<int> ContarCuposLibres(int idActividad, int IdEntrenamiento) {
 
             return  _context.Entrenamientos.Where(e => e.IdEntrenamiento == IdEntrenamiento  &&    e.IdActividad == idActividad).Count();
+        }
+
+        public async Task<List<Entrenamiento>> ListarEntrenamientos(CancellationToken ct = default)
+        {
+            return await _context.Entrenamientos.Include(e=>e.Entrenador).ToListAsync(ct);
         }
     }
 }

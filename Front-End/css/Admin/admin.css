@@ -195,6 +195,7 @@ table tr:hover{
 .section-header
 {
   justify-content: end;
+  gap:1rem;
 }
 .select-profesional {
   background: #1f2937;

@@ -4,7 +4,6 @@ import { RenderProfesionalCards } from "../Cards/renderProfesionalCards.js";
 export async function createProfesionalCards(containerId = "profesionales") {
 
   const container = document.getElementById(containerId);
-
   if (!container) return;
 
   container.innerHTML = `

@@ -18,12 +18,12 @@ namespace Template.Controllers
         public async Task<IActionResult> ProgramarClase([FromBody] ProgramarClasesRequest request)
         {
             var response = await _service.ProgramarClase(request);
-            return CreatedAtAction(nameof(ConsultarClase), new { IdClase = response.IdClase }, response);
+            return CreatedAtAction(nameof(ConsultarClase), new { claseId = response.IdClase }, response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> ModificarClase(ModificarClaseRequest request) {
-            var response = await _service.ModificarClase(request);
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ModificarClase(int id,ModificarClaseRequest request) {
+            var response = await _service.ModificarClase(id,request);
             return Ok(response);
         }
 
@@ -35,7 +35,13 @@ namespace Template.Controllers
 
         }
 
-   
+        [HttpGet]
+        public async Task<IActionResult> ListarClases()
+        {
+            var response = await _service.ListarClases();
+            return Ok(response);
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> EliminarClase(int claseId)

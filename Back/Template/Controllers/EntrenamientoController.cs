@@ -22,7 +22,7 @@ namespace Template.Controllers
         public async Task<IActionResult> ProgramarEntrenamiento([FromBody] ProgramarEntrenamientoRequest request)
         {
             var response = await _service.ProgramarEntrenamiento(request);
-            return CreatedAtAction(nameof(ConsultarEntrenamiento), new { EntrenamientoId = response.Id_Entrenamiento }, response);
+            return CreatedAtAction(nameof(ConsultarEntrenamiento), new { IdEntrenamiento = response.Id_Entrenamiento }, response);
         }
 
 
@@ -45,16 +45,19 @@ namespace Template.Controllers
 
 
 
-        [HttpPut]
-        public async Task<IActionResult> ModificarEntrenamiento([FromBody] ModificarEntrenamientoRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ModificarEntrenamiento(int id,[FromBody] ModificarEntrenamientoRequest request)
         {
-            var response = await _service.ModificarEntrenamiento(request);
+            var response = await _service.ModificarEntrenamiento(id,request);
             return Ok(response);
         }
 
-
-
-
+        [HttpGet]
+        public async Task<IActionResult> ListarEntrenamientos()
+        {
+            var response = await _service.ListarEntrenamientos();
+            return Ok(response);
+        }
 
         [HttpDelete("{EntrenamientoId}")]
         public async Task<IActionResult> EliminarEntrenamiento(int EntrenamientoId)

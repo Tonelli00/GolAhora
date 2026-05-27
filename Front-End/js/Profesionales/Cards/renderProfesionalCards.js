@@ -1,4 +1,4 @@
-export function RenderProfesionalCards(profesionales) {
+export function RenderProfesionalCards(profesionales, tipo) {
 
   if (!profesionales?.length) {
     return `
@@ -22,7 +22,7 @@ export function RenderProfesionalCards(profesionales) {
               <div>
 
                 <span class="profesional-badge">
-                  ${p.tipo ?? "Profesional"}
+                  ${tipo}
                 </span>
 
                 <h3 class="profesional-nombre">

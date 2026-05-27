@@ -4,6 +4,7 @@ namespace Domain.Entities
     public class Clase
     {
         public int IdClase { get; set; }
+        public string Nombre { get; set; }
         public int Cupo { get; set; }
         public IEnumerable<Inscripcion> Inscripto { get; set; }
         public int DniProfesor {  get; set; }

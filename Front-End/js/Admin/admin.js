@@ -8,14 +8,22 @@ import { getProfesionales } from "../Profesionales/getProfesionales.js";
 import { RenderProfesionalCards } from "../Profesionales/Cards/renderProfesionalCards.js";
 import { abrirModalCrearProfesional } from "./Modals/crearProfesional.js  ";
 import { crearTipoCancha } from "./Modals/crearTipoCancha.js";
+import { getCompeticiones } from "../Competiciones/getCompeticiones.js";
+import { RenderCompetitionAdminCards } from "./renderCompetitionAdminCards.js";
+import { crearCompetencia } from "./Modals/crearCompetencia.js";
+import { getEntrenamientos } from "../Actividades/GetEntrenamientos.js";
+import { getClases } from "../Actividades/GetClases.js";
+import { RenderAdminClasesCards } from "./renderClases.js";
+import { RenderAdminEntrenamientoCards } from "./renderEntrenamientos.js";
+
+
+
 export function adminPanel(){
 const botones = document.querySelectorAll(".sidebar-btn");
 const secciones = document.querySelectorAll(".content-section");
 
 botones.forEach((boton, index) => {
-
   boton.addEventListener("click", async() => {
-
 
     botones.forEach(btn => {
       btn.classList.remove("active");
@@ -131,7 +139,7 @@ botones.forEach((boton, index) => {
 
       const profesionales = await getProfesionales(tipo);
 
-      list.innerHTML = RenderProfesionalCards(profesionales);
+      list.innerHTML = RenderProfesionalCards(profesionales,tipo);
 
     } catch (error) {
 
@@ -164,11 +172,91 @@ botones.forEach((boton, index) => {
 }
 
 
-    if(seccionAct=="Dashboard")
+    if(seccionAct =="Dashboard")
       {
         console.log("AAAA")
       }
 
+ if(seccionAct == "Competencias")
+ {
+    const container = document.querySelector("#competiciones");
+
+    container.innerHTML = `
+
+      <div class="section-header">
+
+        <button 
+          class="btn-primary"
+          id="btn-crear-competencia"
+        >
+          + Crear competencia
+        </button>
+
+      </div>
+
+      <div id="competitions-container"></div>
+
+    `;
+
+    const competiciones = await getCompeticiones();
+
+    document.querySelector("#competitions-container").innerHTML =
+      RenderCompetitionAdminCards(competiciones);
+
+    container
+      .querySelector("#btn-crear-competencia")
+      .addEventListener("click", () => {
+        crearCompetencia();
+
+      });
+ }
+
+  if(seccionAct =="Clases")
+  {
+    const container = document.querySelector("#clases");
+    container.innerHTML = `
+
+      <div class="section-header">
+
+        <button 
+          class="btn-primary"
+          id="btn-crear-clase"
+        >
+          + Crear clase
+        </button>
+
+      </div>
+
+      <div id="clases-container"></div>
+    `;
+    const clases = await getClases();
+
+     document.querySelector("#clases-container").innerHTML =
+      RenderAdminClasesCards(clases);
+  }
+  if(seccionAct =="Entrenamientos")
+  {
+    const container = document.querySelector("#entrenamientos");
+     container.innerHTML = `
+
+      <div class="section-header">
+
+        <button 
+          class="btn-primary"
+          id="btn-crear-entrenamiento"
+        >
+          + Crear entrenamiento
+        </button>
+
+      </div>
+
+      <div id="entrenamientos-container"></div>
+    `;
+    
+    const entrenamientos = await getEntrenamientos();
+      document.querySelector("#entrenamientos-container").innerHTML =
+      RenderAdminEntrenamientoCards(entrenamientos);
+  }
 
 
   });

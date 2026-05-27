@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Clase;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,9 +28,9 @@ namespace Infrastructure.Query
             return _context.Inscripciones.FirstOrDefault(i => i.IdInscripcion == InscripcionId);
         }
 
-
-        
-
-        
+        public async Task<List<Clase>> ListarClases(CancellationToken ct = default)
+        {
+            return await _context.Clases.Include(c=>c.Profesor).ToListAsync(ct);
+        }
     }
 }

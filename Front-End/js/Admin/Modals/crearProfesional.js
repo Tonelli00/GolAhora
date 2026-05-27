@@ -4,14 +4,14 @@ export function abrirModalCrearProfesional(tipo) {
 
   const modalExistente = document.querySelector(".modal-overlay");
 
-  if (modalExistente) return;
+  if(modalExistente) return;
 
   const modal = document.createElement("div");
 
   modal.classList.add("modal-overlay");
 
   modal.innerHTML = `
-  
+
     <div class="modal-content">
 
       <div class="modal-header">
@@ -26,92 +26,33 @@ export function abrirModalCrearProfesional(tipo) {
 
       </div>
 
-      <form class="modal-form" id="form-profesional">
+      <form class="modal-form" id="form-crear-profesional">
 
-        <input 
-          type="number"
-          min=0
-          class="modal-input"
-          id="dni"
-          placeholder="DNI"
-          required
-        >
+        <input type="number" id="dni" class="modal-input" placeholder="DNI">
 
-        <input 
-          type="text"
-          class="modal-input"
-          id="nombre"
-          placeholder="Nombre"
-          required
-        >
+        <input type="text" id="nombre" class="modal-input" placeholder="Nombre">
 
-        <input 
-          type="text"
-          class="modal-input"
-          id="apellido"
-          placeholder="Apellido"
-          required
-        >
+        <input type="text" id="apellido" class="modal-input" placeholder="Apellido">
 
-        <input 
-          type="email"
-          class="modal-input"
-          id="correo"
-          placeholder="Correo"
-          required
-        >
+        <input type="email" id="correo" class="modal-input" placeholder="Correo">
 
-        <input 
-          type="password"
-          class="modal-input"
-          id="password"
-          placeholder="Contraseña"
-          required
-        >
+        <input type="password" id="password" class="modal-input" placeholder="Contraseña">
 
-        <input 
-          type="text"
-          class="modal-input"
-          id="localidad"
-          placeholder="Localidad"
-          required
-        >
+        <input type="text" id="localidad" class="modal-input" placeholder="Localidad">
 
-        <input 
-          type="text"
-          class="modal-input"
-          id="pais"
-          placeholder="País"
-          required
-        >
+        <input type="text" id="pais" class="modal-input" placeholder="País">
 
-        <input 
-          type="date"
-          class="modal-input"
-          id="fechaNac"
-          required
-        >
+        <input type="date" id="fechaNac" class="modal-input">
 
-        <input 
-          type="text"
-          class="modal-input"
-          id="certificado"
-          placeholder="Certificado"
-        >
+        <input type="text" id="certificado" class="modal-input" placeholder="Certificado">
 
         <div class="modal-actions">
 
-          <button 
-            type="button"
-            class="btn-cancel"
-          >
+          <button type="button" class="btn-cancel">
             Cancelar
           </button>
 
-          <button 
-            type="submit"
-            class="btn-save"
-          >
+          <button type="submit" class="btn-save">
             Guardar
           </button>
 
@@ -124,153 +65,104 @@ export function abrirModalCrearProfesional(tipo) {
 
   document.body.appendChild(modal);
 
+  function cerrarModal() {
+    modal.remove();
+  }
+
   modal.querySelector(".modal-close")
-    .addEventListener("click", () => {
-      modal.remove();
-    });
+    .addEventListener("click", cerrarModal);
 
   modal.querySelector(".btn-cancel")
-    .addEventListener("click", () => {
-      modal.remove();
-    });
+    .addEventListener("click", cerrarModal);
 
-  const form = modal.querySelector("#form-profesional");
+  modal.querySelector("#form-crear-profesional")
+    .addEventListener("submit", async (e) => {
 
-  form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    e.preventDefault();
+      try {
 
-    try {
+        const fecha = new Date(
+          document.querySelector("#fechaNac").value
+        );
 
-      const fecha = document.querySelector("#fechaNac").value;
+        const body = {
 
-      const body = {
+          dni: Number(document.querySelector("#dni").value),
 
-        dni: Number(document.querySelector("#dni").value),
+          nombre: document.querySelector("#nombre").value,
 
-        nombre: document.querySelector("#nombre").value,
+          apellido: document.querySelector("#apellido").value,
 
-        apellido: document.querySelector("#apellido").value,
+          correo: document.querySelector("#correo").value,
 
-        correo: document.querySelector("#correo").value,
+          password: document.querySelector("#password").value,
 
-        password: document.querySelector("#password").value,
+          localidad: document.querySelector("#localidad").value,
 
-        localidad: document.querySelector("#localidad").value,
+          pais: document.querySelector("#pais").value,
+          
+          fechaNac: document.querySelector("#fechaNac").value,
 
-        pais: document.querySelector("#pais").value,
+          certificado: document.querySelector("#certificado").value
+        };
 
-        fechaNac: fecha,
+        const endpoint =
+          tipo === "Profesor"
+            ? "Profesionales/profesores"
+            : "Profesionales/entrenadores";
 
-        certificado: document.querySelector("#certificado").value
-      };
-
-      const endpoint =
-        tipo === "Profesor"
-          ? "Profesionales/profesores"
-          : "Profesionales/entrenadores";
-
-      const profesionalCreado = await postData(endpoint, body);
-
-const grid = document.querySelector(".profesionales-grid");
-
-    if (grid) {
-
-  const nuevaCard = `
-  
-    <div class="profesional-card">
-
-      <div class="profesional-card-top">
-
-        <div class="profesional-header">
-
-          <div>
-
-            <span class="profesional-badge">
-              ${tipo}
-            </span>
-
-            <h3 class="profesional-nombre">
-              ${profesionalCreado.nombre}
-            </h3>
-
-            <p class="profesional-apellido">
-              ${profesionalCreado.apellido ?? ""}
-            </p>
-
-          </div>
-
-        </div>
-
-        <div class="profesional-meta">
-
-          <span class="meta-pill">
-            ${profesionalCreado.localidad ?? "-"}
-          </span>
-
-          <span class="meta-pill">
-            ${profesionalCreado.pais ?? "-"}
-          </span>
-
-          <span class="meta-pill">
-            ${profesionalCreado.correo ?? "-"}
-          </span>
-
-        </div>
-
-      </div>
-
-      <div class="profesional-footer">
-
-        <span class="estado-activo">
-          Activo
-        </span>
-
-        <button class="btn-contactar">
-          Ver perfil
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-  grid.insertAdjacentHTML("afterbegin", nuevaCard);
-}
+        const profesionalCreado =
+          await postData(endpoint, body);
 
         Swal.fire({
-        toast: true,
-        position: "bottom-end",
-        icon: "success",
-        title: "Profesional creado con éxito",
-        showConfirmButton: false,
-        timer: 2500,
-        timerProgressBar: true,
-        customClass: {
-            popup: "toast-golahora toast-popup-success",
-            title: "toast-title"
-        }
+          toast: true,
+          position: "bottom-end",
+          icon: "success",
+          title: `${tipo} creado correctamente`,
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true
         });
 
-        modal.remove();
 
-    } catch (error) {
 
-      console.error(error);
+        const list =
+          document.querySelector("#profesionales-list");
 
-      Swal.fire({
-                toast: true,
-                position: "bottom-end",
-                icon: "error",
-                title: "Error al crear profesional",
-                showConfirmButton: false,
-                timer: 2500,
-                timerProgressBar: true,
-                customClass: {
-                    popup: "toast-golahora toast-popup-error",
-                    title: "toast-title"
-                }
-            });
-    }
-  });
+        const cardsGrid =
+          list.querySelector(".profesionales-grid");
+
+        if(cardsGrid){
+
+          cardsGrid.insertAdjacentHTML(
+            "beforeend",
+            RenderProfesionalCards(
+              [profesionalCreado],
+              tipo
+            ).replace(
+              '<div class="profesionales-grid">',
+              ""
+            ).replace("</div>", "")
+          );
+
+        }
+
+        cerrarModal();
+
+      } catch(error) {
+
+        console.error(error);
+
+        Swal.fire({
+          toast: true,
+          position: "bottom-end",
+          icon: "error",
+          title: error.message ?? "Error al crear profesional",
+          showConfirmButton: false,
+          timer: 2500
+        });
+      }
+
+    });
 }
