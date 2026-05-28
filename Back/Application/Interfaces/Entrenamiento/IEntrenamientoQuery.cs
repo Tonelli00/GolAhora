@@ -7,6 +7,7 @@ namespace Application.Interfaces.Entrenamiento
         Task<Domain.Entities.Entrenamiento> ImprimirEntrenamiento(int EntrenamientoId, CancellationToken ct = default);
         Task<List<Domain.Entities.Entrenamiento>> ListarEntrenamientos(CancellationToken ct = default);
         Task<List<Domain.Entities.Entrenamiento>> ListarEntrenamientosPorEntrenador(int entrenadorDni, CancellationToken ct = default);
-       
+
+        Task<List<Domain.Entities.Inscripcion>> VerInscriptos(int entrenamientoId, CancellationToken ct = default);
     }
 }

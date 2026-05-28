@@ -66,6 +66,13 @@ namespace Template.Controllers
             return Ok(response);
         }
 
+        [HttpGet("inscriptos/{EntrenamientoId}")]
+        public async Task<IActionResult> VerInscriptos([FromRoute] int EntrenamientoId)
+        {
+            var response = await _service.VerInscriptos(EntrenamientoId);
+            return Ok(response);
+        }
+
         [HttpDelete("{Id}")]
         public async Task<IActionResult> EliminarEntrenamiento(int Id)
         {

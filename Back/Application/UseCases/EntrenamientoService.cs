@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Request.Entrenamiento;
 using Application.DTOs.Response.Entrenamiento;
+using Application.DTOs.Response.Inscripcion;
 using Application.Exceptions;
 using Application.Interfaces.Entrenamiento;
 using Application.Interfaces.Entrenamiento;
@@ -260,6 +261,25 @@ namespace Application.UseCases
 
         }
 
-        
+        public async Task<List<InscripcionResponse>> VerInscriptos(int entrenamientoId)
+        {
+            var entrenamiento = await _entrenamientoQuery.ConsultarEntrenamiento(entrenamientoId) ?? throw new ExceptionNotFound("Entrenamiento no encontrado");
+            var inscriptos = await _entrenamientoQuery.VerInscriptos(entrenamientoId);
+
+            return inscriptos.Select(inscripto => new InscripcionResponse
+            {
+                IdInscripcion = inscripto.IdInscripcion,
+                DniCliente = inscripto.DniCliente,
+                Nombre = inscripto.cliente.Nombre,
+                Apellido = inscripto.cliente.Apellido,
+                Horario = inscripto.Horario,
+                PrecioInscr = inscripto.PrecioInscr,
+                NroAct = inscripto.NroAct,
+                IdAct = inscripto.IdAct,
+                IdDescuento = inscripto.IdDescuento
+            }).ToList();
+
+
+        }
     }
 }

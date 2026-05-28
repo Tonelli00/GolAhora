@@ -38,6 +38,9 @@ namespace Infrastructure.Query
             return await _context.Entrenamientos.Include(e=>e.Entrenador).Where(entrenamiento => entrenamiento.DniEntrenador == entrenadorDni).ToListAsync(ct);
         }
 
-        
+        public async Task<List<Inscripcion>> VerInscriptos(int entrenamientoId, CancellationToken ct = default)
+        {
+            return await _context.Inscripciones.Include(i=>i.cliente).Include(i => i.entrenamiento).ThenInclude(e => e.Entrenador).Where(i => i.IdAct == entrenamientoId).ToListAsync(ct); 
+        }
     }
 }

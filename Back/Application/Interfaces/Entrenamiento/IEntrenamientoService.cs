@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Request.Entrenamiento;
 using Application.DTOs.Response.Entrenamiento;
+using Application.DTOs.Response.Inscripcion;
 
 namespace Application.Interfaces.Entrenamiento
 {
@@ -16,7 +17,7 @@ namespace Application.Interfaces.Entrenamiento
         Task<EntrenamientoResponse> EliminarEntrenamiento(int entrenamientoId);
         Task<List<EntrenamientoFullResponse>> ListarEntrenamientos();
         Task<List<EntrenamientoResponse>> ListarEntrenamientosPorDni(int entrenadorDni);
-
+        Task<List<InscripcionResponse>> VerInscriptos(int entrenamientoId);
       
 
     }
