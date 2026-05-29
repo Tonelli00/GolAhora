@@ -367,8 +367,18 @@ namespace Infrastructure.Persistence
                     .HasColumnType("decimal(10,2)");
 
                 entity.HasOne(c => c.Reserva)
-                    .WithMany()
-                    .HasForeignKey(c => c.IdReserva)
+                    .WithOne(r=>r.Cobro)
+                    .HasForeignKey<Cobro>(c => c.IdReserva)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.Inscripcion)
+               .WithOne(i=>i.Cobro)
+               .HasForeignKey<Cobro>(c => c.IdInscripcion)
+               .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.Cliente)
+                    .WithMany(cli => cli.Cobros)
+                    .HasForeignKey(c => c.DniCliente)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -443,11 +453,7 @@ namespace Infrastructure.Persistence
                     .HasForeignKey(i => i.DniCliente)
                     .HasPrincipalKey(c => c.Dni)
                     .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(i => i.cancha)
-                    .WithMany()
-                    .HasForeignKey(i => i.IdCancha)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    
             });
 
             // ASISTENCIA

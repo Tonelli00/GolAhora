@@ -22,21 +22,21 @@ namespace Template.Controllers
         public async Task<IActionResult> ProgramarEntrenamiento([FromBody] ProgramarEntrenamientoRequest request)
         {
             var response = await _service.ProgramarEntrenamiento(request);
-            return CreatedAtAction(nameof(ConsultarEntrenamiento), new { EntrenamientoId = response.Id_Entrenamiento }, response);
+            return CreatedAtAction(nameof(ConsultarEntrenamiento), new { Id = response.Id_Entrenamiento }, response);
         }
 
 
 
-        [HttpGet("{IdEntrenamiento}")]
-        public async Task<IActionResult> ConsultarEntrenamiento(int IdEntrenamiento)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> ConsultarEntrenamiento(int Id)
         {
-            var response = await _service.ConsultarEntrenamiento(IdEntrenamiento);
+            var response = await _service.ConsultarEntrenamiento(Id);
             return Ok(response);
         }
 
 
 
-        [HttpGet("{EntrenamientoId}")]
+        [HttpGet("{EntrenamientoId}/detalle")]
         public async Task<IActionResult> Entrenamiento(int EntrenamientoId)
         {
             var response = await _service.ImprimirEntrenamiento(EntrenamientoId);
@@ -45,21 +45,38 @@ namespace Template.Controllers
 
 
 
-        [HttpPut]
-        public async Task<IActionResult> ModificarEntrenamiento([FromBody] ModificarEntrenamientoRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ModificarEntrenamiento(int id,[FromBody] ModificarEntrenamientoRequest request)
         {
-            var response = await _service.ModificarEntrenamiento(request);
+            var response = await _service.ModificarEntrenamiento(id,request);
             return Ok(response);
         }
 
-
-
-
-
-        [HttpDelete("{EntrenamientoId}")]
-        public async Task<IActionResult> EliminarEntrenamiento(int EntrenamientoId)
+        [HttpGet]
+        public async Task<IActionResult> ListarEntrenamientos()
         {
-            var response = await _service.EliminarEntrenamiento(EntrenamientoId);
+            var response = await _service.ListarEntrenamientos();
+            return Ok(response);
+        }
+        
+        [HttpGet("entrenamientos/{Entrenadordni}")]
+        public async Task<IActionResult> ListarEntrenamientosPorEntrenador(int Entrenadordni)
+        {
+            var response = await _service.ListarEntrenamientosPorDni(Entrenadordni);
+            return Ok(response);
+        }
+
+        [HttpGet("inscriptos/{EntrenamientoId}")]
+        public async Task<IActionResult> VerInscriptos([FromRoute] int EntrenamientoId)
+        {
+            var response = await _service.VerInscriptos(EntrenamientoId);
+            return Ok(response);
+        }
+
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> EliminarEntrenamiento(int Id)
+        {
+            var response = await _service.EliminarEntrenamiento(Id);
             return Ok(response);
         }
     }

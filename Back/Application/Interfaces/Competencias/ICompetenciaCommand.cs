@@ -18,5 +18,6 @@ namespace Application.Interfaces.Competencias
         Task EliminarCompetencia(Competencia competencia, CancellationToken ct = default);
         Task<int> AgregarEquipo(Equipo equipo,int idcompetencia, CancellationToken ct = default);
         Task AgregarPartidos(List<Partido> fixture, CancellationToken ct = default);
+        Task DecrementarCupo(int idCompetencia, CancellationToken ct = default);
     }
 }

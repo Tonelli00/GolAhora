@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using Application.Interfaces.Competencias;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Command
-{ 
-    public class CompetenciaCommand: ICompetenciaCommand
+{
+    public class CompetenciaCommand : ICompetenciaCommand
     {
         private readonly AppDbContext _context;
 
@@ -41,7 +42,7 @@ namespace Infrastructure.Command
          .AnyAsync(c => c.IdCompetencia == idcompetencia, ct);
 
             if (!competencia)
-                throw new Exception("Competencia no encontrada");
+                throw new ExceptionNotFound("Competencia no encontrada");
 
             equipo.IdCompetencia = idcompetencia;
             await _context.Equipos.AddAsync(equipo, ct);
@@ -51,6 +52,16 @@ namespace Infrastructure.Command
         public async Task AgregarPartidos(List<Partido> fixture, CancellationToken ct = default)
         {
             await _context.Partidos.AddRangeAsync(fixture, ct);
+            await _context.SaveChangesAsync(ct);
+        }
+        public async Task DecrementarCupo(int idCompetencia, CancellationToken ct = default)
+        {
+            var competencia = await _context.Competencias
+                .FirstOrDefaultAsync(c => c.IdCompetencia == idCompetencia, ct);
+            if (competencia is null)
+                throw new ExceptionNotFound("Competencia no encontrada");
+            competencia.Cupos--;
+            _context.Competencias.Update(competencia);
             await _context.SaveChangesAsync(ct);
         }
     }

@@ -128,7 +128,7 @@ namespace Application.UseCases
                     HoraFin = p.HoraFin,
                     Estado = p.Estado
                 }).ToList()
-            }); 
+            });
         }
 
         public async Task<IEnumerable<EquipoResponse?>> ObtenerEquipos(int idcompetencia, CancellationToken ct = default)

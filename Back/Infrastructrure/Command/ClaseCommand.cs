@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Clase;
 using Domain.Entities;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Infrastructure.Command
@@ -19,7 +20,7 @@ namespace Infrastructure.Command
         public async Task<Domain.Entities.Clase> ProgramarClase(Domain.Entities.Clase Clase, CancellationToken ct = default) {
 
 
-            await _context.Clases.AddAsync(Clase, ct);
+             _context.Clases.Add(Clase);
             await _context.SaveChangesAsync(ct);
             return Clase;
         }
@@ -46,6 +47,14 @@ namespace Infrastructure.Command
         public Task<Asistencia> PasarAsistencia(Clase Clase, CancellationToken ct = default)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int> DecrementarCupo(int claseId, CancellationToken ct = default)
+        {
+            var clase = await _context.Clases.FirstOrDefaultAsync(c => c.IdClase == claseId, ct);
+            clase.Cupo--;
+            await _context.SaveChangesAsync(ct);
+            return clase.Cupo;
         }
     }
 }

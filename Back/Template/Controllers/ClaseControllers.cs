@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Request.Clase;
+﻿using Application.DTOs.Request.Asistencia;
+using Application.DTOs.Request.Clase;
 using Application.Interfaces.Clase;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,12 +19,24 @@ namespace Template.Controllers
         public async Task<IActionResult> ProgramarClase([FromBody] ProgramarClasesRequest request)
         {
             var response = await _service.ProgramarClase(request);
-            return CreatedAtAction(nameof(ConsultarClase), new { IdClase = response.IdClase }, response);
+            return CreatedAtAction(nameof(ConsultarClase), new { claseId = response.IdClase }, response);
+        }
+        [HttpPost("asistencia/{claseId}")]
+        public async Task<IActionResult> CrearAsistencia([FromRoute] int claseId,[FromBody] List<RegistrarAsistenciaRequest> request)
+        {
+            var response = await _service.RegistrarAsistencia(claseId,request);
+            return Ok(response);
+        }
+        [HttpGet("inscriptos/{claseId}")]
+        public async Task<IActionResult> VerInscriptos([FromRoute] int claseId)
+        {
+            var response = await _service.VerInscriptos(claseId);
+            return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> ModificarClase(ModificarClaseRequest request) {
-            var response = await _service.ModificarClase(request);
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ModificarClase(int id,ModificarClaseRequest request) {
+            var response = await _service.ModificarClase(id,request);
             return Ok(response);
         }
 
@@ -34,13 +47,27 @@ namespace Template.Controllers
             return Ok(response);
 
         }
+        [HttpGet("clases/{profesorId}")]
+        public async Task<IActionResult> VerClasePorProfesor(int profesorId)
+        {
 
-   
+            var response = await _service.VerClasesPorProfesorDni(profesorId);
+            return Ok(response);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ListarClases()
+        {
+            var response = await _service.ListarClases();
+            return Ok(response);
+        }
+
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> EliminarClase(int claseId)
+        public async Task<IActionResult> EliminarClase(int id)
         {
-            var response = await _service.EliminarClase(claseId);
+            var response = await _service.EliminarClase(id);
             return Ok(response);
         }
 

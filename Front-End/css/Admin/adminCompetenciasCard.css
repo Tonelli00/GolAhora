@@ -1,0 +1,118 @@
+.admin-competencias-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px,1fr));
+  gap:20px;
+}
+
+.competencia-admin-card{
+  background:#161616;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  overflow:hidden;
+  transition:0.25s ease;
+}
+
+.competencia-admin-card:hover{
+  transform:translateY(-4px);
+  border-color:#22c55e;
+  box-shadow:0 10px 30px rgba(0,0,0,0.35);
+}
+
+.competencia-admin-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  padding:22px 22px 12px;
+}
+
+.competencia-badge{
+  background:#22c55e;
+  color:black;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.competencia-title{
+  color:white;
+  font-size:24px;
+  margin-top:12px;
+}
+
+.competencia-precio{
+  color:#22c55e;
+  font-size:22px;
+  font-weight:700;
+}
+
+.competencia-body{
+  padding:0 22px 22px;
+}
+
+.competencia-descripcion{
+  color:#bdbdbd;
+  line-height:1.5;
+  margin-bottom:20px;
+}
+
+.competencia-info{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.competencia-info-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.competencia-label{
+  color:#9ca3af;
+  font-size:14px;
+}
+
+.competencia-value{
+  color:white;
+  font-weight:600;
+}
+
+.competencia-footer{
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding:18px 22px;
+  display:flex;
+  gap:12px;
+}
+
+.competencia-btn{
+  flex:1;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:700;
+  transition:0.2s ease;
+}
+
+.competencia-btn-edit{
+  background:#22c55e;
+  color:black;
+}
+
+.competencia-btn-edit:hover{
+  background:#16a34a;
+}
+
+.competencia-btn-delete{
+  background:#262626;
+  color:white;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.competencia-btn-delete:hover{
+  background:#dc2626;
+  border-color:#dc2626;
+}

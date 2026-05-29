@@ -1,11 +1,9 @@
 ﻿using Application.Interfaces.Entrenamiento;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection.Metadata.Ecma335;
+
 
 namespace Infrastructure.Query
 {
@@ -28,6 +26,21 @@ namespace Infrastructure.Query
         public async Task<int> ContarCuposLibres(int idActividad, int IdEntrenamiento) {
 
             return  _context.Entrenamientos.Where(e => e.IdEntrenamiento == IdEntrenamiento  &&    e.IdActividad == idActividad).Count();
+        }
+
+        public async Task<List<Entrenamiento>> ListarEntrenamientos(CancellationToken ct = default)
+        {
+            return await _context.Entrenamientos.Include(e=>e.Entrenador).ToListAsync(ct);
+        }
+
+        public async Task<List<Entrenamiento>> ListarEntrenamientosPorEntrenador(int entrenadorDni, CancellationToken ct = default)
+        {
+            return await _context.Entrenamientos.Include(e=>e.Entrenador).Where(entrenamiento => entrenamiento.DniEntrenador == entrenadorDni).ToListAsync(ct);
+        }
+
+        public async Task<List<Inscripcion>> VerInscriptos(int entrenamientoId, CancellationToken ct = default)
+        {
+            return await _context.Inscripciones.Include(i=>i.cliente).Include(i => i.entrenamiento).ThenInclude(e => e.Entrenador).Where(i => i.IdAct == entrenamientoId).ToListAsync(ct); 
         }
     }
 }

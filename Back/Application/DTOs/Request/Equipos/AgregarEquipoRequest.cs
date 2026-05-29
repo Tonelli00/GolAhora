@@ -9,6 +9,6 @@ namespace Application.DTOs.Request.Equipos
 
     public class CrearEquipoRequest
     {
-public string nombre { get; set; }
+            public string nombre { get; set; }
     }
 }
