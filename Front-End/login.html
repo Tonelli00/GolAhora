@@ -7,8 +7,46 @@
   <link rel="stylesheet" href="./css/style.css"/>
   <link rel="stylesheet" href="./css/global/global.css">
   <link rel="stylesheet" href="./css/Forms/login.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="module" src="./js/Clientes/Login/login.js"></script>
+  <head>
+
+...
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="./js/Clientes/Login/login.js"></script>
+
+<script>
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+const oldHandleLogin = window.handleLogin;
+
+window.handleLogin = async function(){
+
+if(oldHandleLogin)
+{
+   await oldHandleLogin();
+}
+
+const email =
+document.getElementById("email")
+.value;
+
+if(
+email.includes("admin")
+)
+{
+   localStorage.setItem(
+      "adminLogueado",
+      "true"
+   );
+}
+
+}
+
+})
+
+</script>
+
 </head>
 <body>
 
