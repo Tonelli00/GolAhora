@@ -68,6 +68,26 @@ export async function handleLogin() {
     localStorage.setItem("nombre",response.nombre);
     localStorage.setItem("logged",true);
 
+    /* 
+    CHEQUEO SIMPLE ADMIN
+    */
+
+if(
+email.value.includes("admin")
+)
+{
+  localStorage.setItem(
+    "adminLogueado",
+    "true"
+  );
+}
+else
+{
+  localStorage.removeItem(
+    "adminLogueado"
+  );
+}
+
     Swal.fire({
       toast: true,
       position: "bottom-end",
