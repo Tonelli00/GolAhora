@@ -62,19 +62,7 @@ export async function handleLogin() {
   try {
 
     const response = await Login(email.value, password.value);
-
-    if(localStorage.getItem("dni"))
-        {
-            localStorage.removeItem("dni")    
-        }
-    if(localStorage.getItem("nombre"))
-        {
-            localStorage.removeItem("nombre")    
-        }
-    if(localStorage.getItem("logged"))
-        {
-            localStorage.removeItem("logged")    
-        }
+    SESSION_KEYS.forEach(key => localStorage.removeItem(key));
 
     localStorage.setItem("dni",response.dni);
     localStorage.setItem("nombre",response.nombre);
