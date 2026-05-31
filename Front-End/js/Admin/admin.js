@@ -575,6 +575,11 @@ if (seccionAct == "Competencias") {
         console.error("No existe el container #cobrosYrecibos");
         return;
       }
+  
+       if(seccionAct == "Descuentos")
+       {
+         window.location.href = "./descuentos.html";
+       }
 
       container.innerHTML = renderAccionesCobro() + renderAccionesRecibo();
     }
