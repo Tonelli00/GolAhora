@@ -11,38 +11,6 @@
   <script type="module" src="./js/Clientes/Login/login.js"></script>
 
 <script>
-
-window.addEventListener("DOMContentLoaded",()=>{
-
-const oldHandleLogin = window.handleLogin;
-
-window.handleLogin = async function(){
-
-if(oldHandleLogin)
-{
-   await oldHandleLogin();
-}
-
-const email =
-document.getElementById("email")
-.value;
-
-if(
-email.includes("admin")
-)
-{
-   localStorage.setItem(
-      "adminLogueado",
-      "true"
-   );
-}
-
-}
-
-})
-
-</script>
-
 </head>
 <body>
 
