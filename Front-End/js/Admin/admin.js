@@ -374,11 +374,8 @@ botones.forEach((boton, index) => {
     document.querySelector("#competitions-container").innerHTML =
       RenderCompetitionAdminCards(competiciones);
 
-    container
-      .querySelector("#btn-crear-competencia")
-      .addEventListener("click", () => {
+    container.querySelector("#btn-crear-competencia").addEventListener("click", () => {
         crearCompetencia();
-
       });
  }
 
