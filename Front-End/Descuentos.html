@@ -6,6 +6,20 @@
   <title>Descuentos - Gol Ahora</title>
   <link rel="stylesheet" href="./css/style.css"/>
   <link rel="stylesheet" href="./css/descuentos.css"/>
+
+<script>
+
+const adminLogueado =
+localStorage.getItem("adminLogueado");
+
+if(adminLogueado !== "true")
+{
+   window.location.href =
+   "./login.html";
+}
+
+</script>
+  
   <script defer src="./js/Descuentos/descuentos.js"></script>
 </head>
 <body>
